@@ -554,8 +554,7 @@ details[open] summary::after {
     }
 
     .todo-wrapper h1 {
-        margin-top: 15px;
-        font-size: 12vw;
+        font-size: 8vw;
     }
 }
 
