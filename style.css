@@ -26,7 +26,7 @@ body {
 
 /* NAV Bar */
 header {
-    position: relative;
+    position: fixed;
     width: 100%;
     height: 80px;
     background-color: var(--background-color);
@@ -211,6 +211,8 @@ nav li a:hover::before {
 
     #menu-btn i {
         transition: transform 0.4s ease-in-out;
+        z-index: 3;
+        pointer-events: auto;
     }
 
     #menu-btn input:checked ~ i {
@@ -226,12 +228,20 @@ nav li a:hover::before {
     }
 
     .search-input {
-        display: inline;
+        /* display: none; */
+        opacity: 0;
+        visibility: hidden;
         position: relative;
         padding: 1rem;
-        opacity: 1;
         width: 50%;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
     } 
+
+    .search-input.visible {
+        opacity: 1;
+        display: inline;
+        visibility: visible;
+    }
 
     .search-input input {
         padding: 0.5rem 1rem;
@@ -247,7 +257,7 @@ nav li a:hover::before {
 
 /* Main Section */
 .main {
-    min-height: 90vh;
+    height: 100vh;
     width: 100%;
     background-color: var(--white-color);
     display: flex;
@@ -256,6 +266,8 @@ nav li a:hover::before {
     background-repeat: no-repeat;
     background-position: center;
     color: var(--text-4);
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
 .side-list {
@@ -359,6 +371,7 @@ details[open] summary::after {
 
 /* END OF MAIN */
 
+/* TODO Section */
 .todo-wrapper {
     display: flex;
     width: 100%;
@@ -380,6 +393,7 @@ details[open] summary::after {
     text-transform: uppercase;
     text-align: center;
 }
+
 
 #to-do-input {
     box-sizing: border-box;
@@ -472,6 +486,38 @@ details[open] summary::after {
     transition: 0.8s ease;
     cursor: pointer;
 }
+
+#to-do-filter {
+    display: none; 
+}
+
+/* REMOVE SCROLLING */
+#to-do-list {
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    /* Hide Scrollbar */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; 
+}
+
+/* SCROLLBAR STYLE */
+/* #to-do-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+#to-do-list::-webkit-scrollbar-track {
+  background: none;
+  border-radius: 5px;
+}
+
+#to-do-list::-webkit-scrollbar-thumb {
+  background-color: var(--text-4);
+  border-radius: 4px;
+  border: 2px solid var(--background-color-main);
+} */
+
+/* REMOVE SCROLLING */
 
 #to-do-list input[type="checkbox"]:checked ~ .custom-checkbox {
     background-color: var(--text-4);
