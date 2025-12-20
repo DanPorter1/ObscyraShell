@@ -123,13 +123,14 @@ nav li a:hover::before {
 .search-input {
     position: absolute;
     top: 80px;
-    left: 0;
-    width: 100%;
+    /* left: 60vw; */
+    right: 0;
+    width: 40%;
     padding: 20px;
     /* background: var(--background-color-main); */
     z-index: 10;
-    opacity: 0;
     transition: opacity 0.3s ease;
+    opacity: 0;
     pointer-events: none;
 }
 
