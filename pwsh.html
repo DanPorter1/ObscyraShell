@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta v2>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/pwsh.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="script.js" defer></script>
+    <script src="/js/nav.js" defer></script>
+    <script src="/js/pwsh.js" defer></script>
     <title>Obscyra Shell</title>
 </head>
 <body>
@@ -14,9 +16,9 @@
      <header>
         <!-- Logo -->
          <div class="logo">
-            <a href=""><img src="logo2.png" alt=""></a>
+            <a href=""><img src="/assets/img/logo2.png" alt=""></a>
          </div>
-         <nav>
+         <nav id="main-nav">
             <!-- Left Links -->
              <ul class="nav-left">
                 <li><a href="">Networks</a></li>
@@ -28,12 +30,12 @@
                 <li id="to-do-link"><a href="index.html">To-Do</a></li>
              </ul>
              <!-- Search Btn -->
-                <!-- <div id="search-btn">
+                <div id="search-btn">
                     <i class="fas fa-search" id="search-check"></i>
                 </div>
                 <div class="search-input" id="search-input">
-                    <input type="text" placeholder="Search...">
-                </div> -->
+                    <!-- <input type="text" placeholder="Search..."> -->
+                </div> 
          </nav>
 
          <!-- Menu Btn -->
@@ -42,7 +44,99 @@
             <i class="fa-regular fa-square-caret-down" id="menu-icon"></i>
         </div>
      </header>
-        <section class="main" id="homemain">
+        <section class="main" id="pwsh-wrapper">
+            <div class="pwsh-wrapper">
+                <h1>Powershell</h1>
+                <h2>Essential PowerShell Commands Help</h2>
+                
+                <div class="ps-commands">
+
+                    <div class="psection">
+                        <div class="psection-head">Discovery & Exploration</div>
+                        <div class="psection-body">
+                        <p>These build intuition for how PowerShell objects behave.</p>
+                        <ul>
+                            <li><strong>Get-Command</strong> — Find commands by name, verb, or module</li>
+                            <li><strong>Get-Help &lt;cmd&gt; -Online</strong> — Open full docs in browser</li>
+                            <li><strong>Get-Member</strong> — Inspect object properties/methods</li>
+                            <li><strong>Get-Module -ListAvailable</strong> — See what’s installed</li>
+                            <li><strong>Import-Module</strong> — Load modules explicitly</li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="psection">
+                        <div class="psection-head">Filesystem & Path Operations</div>
+                        <div class="psection-body">
+                        <p>Perfect for modular utilities that need predictable path handling.</p>
+                        <ul>
+                            <li><strong>Get-ChildItem (ls)</strong> — Enumerate files/folders</li>
+                            <li><strong>Resolve-Path</strong> — Convert relative → absolute</li>
+                            <li><strong>Join-Path</strong> — Safe path concatenation</li>
+                            <li><strong>Test-Path</strong> — Check existence</li>
+                            <li><strong>New-Item / Remove-Item</strong> — Create/delete files or folders</li>
+                            <li><strong>Copy-Item / Move-Item</strong> — File operations</li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="psection">
+                        <div class="psection-head">Filtering, Sorting, and Shaping Output</div>
+                        <div class="psection-body">
+                        <p>These are the backbone of clean, signature output.</p>
+                        <ul>
+                            <li><strong>Where-Object</strong> — Filter objects</li>
+                            <li><strong>Sort-Object</strong> — Sort by property</li>
+                            <li><strong>Select-Object</strong> — Choose or rename properties</li>
+                            <li><strong>Format-Table -AutoSize</strong> — Clean tabular output</li>
+                            <li><strong>Format-List *</strong> — Full detail dump</li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="psection">
+                        <div class="psection-head">Diagnostics & Troubleshooting</div>
+                        <div class="psection-body">
+                        <p>Your tactical debugging zone.</p>
+                        <ul>
+                            <li><strong>Test-NetConnection</strong> — Ping, port tests, traceroute</li>
+                            <li><strong>Resolve-DnsName</strong> — DNS lookup</li>
+                            <li><strong>Get-NetAdapter</strong> — NIC info</li>
+                            <li><strong>Get-EventLog / Get-WinEvent</strong> — Event logs</li>
+                            <li><strong>Get-Process / Stop-Process</strong> — Process control</li>
+                            <li><strong>Get-Service / Restart-Service</strong> — Service management</li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="psection">
+                        <div class="psection-head">Scripting & Automation Essentials</div>
+                        <div class="psection-body">
+                        <p>These commands matter when building modular systems.</p>
+                        <ul>
+                            <li><strong>Read-Host</strong> — Prompt for input</li>
+                            <li><strong>Write-Output / Write-Host</strong> — Output control</li>
+                            <li><strong>Start-Job / Receive-Job</strong> — Background tasks</li>
+                            <li><strong>Start-Process</strong> — Launch external apps</li>
+                            <li><strong>Invoke-Expression</strong> — Execute dynamic code (use sparingly)</li>
+                            <li><strong>Invoke-RestMethod</strong> — API calls</li>
+                            <li><strong>Invoke-Command</strong> — Remote execution</li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="psection">
+                        <div class="psection-head">Security & Credentials</div>
+                        <div class="psection-body">
+                        <p>Useful for utilities that need secure handling.</p>
+                        <ul>
+                            <li><strong>Get-Credential</strong> — Secure credential prompt</li>
+                            <li><strong>ConvertTo-SecureString</strong> — Encrypt strings</li>
+                            <li><strong>Export-Clixml / Import-Clixml</strong> — Secure credential storage</li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
 
         </section>
 </body>
