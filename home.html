@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta v2>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/nav.js" defer></script>
+    <title>Obscyra Shell</title>
+</head>
+<body>
+    <!-- Navbar -->
+     <header>
+        <!-- Logo -->
+         <div class="logo">
+            <a href="home.html"><img src="assets/img/logo2.png" alt=""></a>
+         </div>
+         <nav id="main-nav">
+            <!-- Left Links -->
+             <ul class="nav-left">
+                <li><a href="">Networks</a></li>
+                <li><a href="pwsh.html">Powershell</a></li>
+             </ul>
+             <!-- Right Links -->
+             <ul>
+                <li><a href="">Emails</a></li>
+                <li id="to-do-link"><a href="index.html">To-Do</a></li>
+             </ul>
+             <!-- Search Btn -->
+                <div id="search-btn">
+                    <i class="fas fa-search" id="search-check"></i>
+                </div>
+                <div class="search-input" id="search-input">
+                    <!-- <input type="text" placeholder="Search..."> -->
+                </div>
+         </nav>
+
+         <!-- Menu Btn -->
+         <div id="menu-btn">
+            <input type="checkbox" id="menu-check"/>
+            <i class="fa-regular fa-square-caret-down" id="menu-icon"></i>
+        </div>
+     </header>
+        <section class="main">
+            <div class="login-wrapper">
+                <h1>Log In</h1>
+                <div class="center-wrapper">
+                <form>
+                    <div id="acc-form-wrapper">
+                        <div class="acc-form">
+                            <label for="acc-email">E-Mail Address</label>
+                            <input type="text" id="acc-email" placeholder="Email Address">
+                        </div>
+                        <div class="acc-form">
+                            <label for="acc-pass">Password</label>
+                            <input type="password" id="acc-pass" placeholder="Password">
+                            <input type="submit" class="submit-btn" value="Log-in">
+                        </div>
+                        <div id="acc-info">
+                            <p id="reg-link">Register Here</p> 
+                            <p id="issues-link">Forgot Password</p>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </section>
+</body>
+</html>
