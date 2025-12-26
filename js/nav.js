@@ -3,16 +3,6 @@ const searchCheckbox = document.getElementById("search-check");
 const searchInputContainer = document.getElementById("search-input");
 const searchIcon = document.querySelector("#search-btn i");
 
-// searchIcon.addEventListener("click", () => {
-// searchCheckbox.checked = !searchCheckbox.checked;
-
-//   if (searchCheckbox.checked) {
-//     searchInputContainer.classList.add("visible");
-//   } else {
-//     
-//   }
-// });
-
 // REWORK SEARCH BOX -- ISSUES WITH TO-DO LINK 
 searchIcon.addEventListener("click", () => {
 searchCheckbox.checked = !searchCheckbox.checked;
@@ -45,3 +35,11 @@ menuIcon.addEventListener("click", () => {
   }
 });
 // END OF SEARCH BOX TOGGLE
+
+// Alert for log out - Needs Refresh 
+// document.addEventListener("DOMContentLoaded", () => {
+//     const params = new URLSearchParams(window.location.search);
+//     if (params.get("expired") === "1") {
+//         alert("Your session has expired. Please log in again."); 
+//     } 
+// });
