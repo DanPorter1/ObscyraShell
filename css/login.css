@@ -54,6 +54,15 @@
     margin: 0 auto;
 }
 
+.error-msg {
+    color: var(--text-3);
+    font-size: 0.8rem;
+    font-weight: bold;
+    height: 14px;
+    margin: 0 auto;
+    text-transform: capitalize;
+} 
+
 .submit-btn {
     background-color: transparent;
     color: var(--text-4);

@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/nav.js" defer></script>
-    <script src="js/login.js" defer></script>
     <title>Obscyra Shell</title>
 </head>
 <body>
@@ -54,10 +53,12 @@
                         <div class="acc-form">
                             <label for="acc-email">E-Mail Address</label>
                             <input type="text" id="acc-email" placeholder="Email Address" autocomplete="username">
+                            <p class="error-msg" id="error-email"></p>
                         </div>
                         <div class="acc-form">
                             <label for="acc-pass">Password</label>
                             <input type="password" id="acc-pass" placeholder="Password" autocomplete="current-password">
+                            <p class="error-msg" id="error-pass"></p>
                             <input id="acc-login" type="button" class="submit-btn" value="Log-in">
                         </div>
                         <div id="acc-info">
@@ -73,10 +74,12 @@
                         <div class="acc-form">
                             <label for="reg-email">E-Mail Address</label>
                             <input type="text" id="reg-email" placeholder="Email Address" autocomplete="username">
+                            <p class="error-msg" id="error-remail"></p>
                         </div>
                         <div class="acc-form">
                             <label for="reg-pass">Password</label>
                             <input type="password" id="reg-pass" placeholder="Password" autocomplete="new-password">
+                            <p class="error-msg" id="error-rpass"></p>
                             <label for="reg-pass-val">Re-Enter Password</label>
                             <input type="password" id="reg-pass-val" placeholder="Password" autocomplete="new-password">
                             <input id="acc-reg" type="button" class="submit-btn" value="Register">
@@ -136,5 +139,6 @@
             </div>
             </div>
         </section>
+<script src="js/login.js" defer></script>
 </body>
 </html>
