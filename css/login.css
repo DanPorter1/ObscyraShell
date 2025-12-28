@@ -12,7 +12,7 @@
 }
 
 .login-wrapper h1 {
-    margin-top: 100px;
+    margin-top: 15vh;
     margin-bottom: 20px;
     font-size: 3rem;
     font-weight: 800;
@@ -64,6 +64,12 @@
     text-transform: uppercase;
 }
 
+.submit-btn:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+}
+
 #acc-info {
     display: flex;
     justify-content: space-between;
@@ -73,6 +79,21 @@
     margin-left: 50px;
     margin-right: 50px;
     font-size: smaller;
+    gap: 2vh;
+}
+
+#acc-info :hover {
+    color: var(--text-3);
+    cursor: pointer;
+}
+
+#backLink:hover {
+    color: var(--text-3);
+    cursor: pointer;
+}
+
+.cookie-wrapper {
+    width: 60vw;
 }
 
 *::before,

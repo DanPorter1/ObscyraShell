@@ -7,7 +7,7 @@ async function protect() {
     const token = localStorage.getItem("authToken");
 
     if (!token) {
-        window.location.href = "home.html";
+        window.location.href = "index.html";
         return;
     }
 
@@ -21,10 +21,10 @@ async function protect() {
             document.body.style.display = "block";
         } else {
             localStorage.removeItem("authToken");
-            window.location.href = "home.html?expired=1";
+            window.location.href = "index.html?expired=1";
         }
     } catch (err) {
         localStorage.removeItem("authToken");
-        window.location.href = "home.html?expired=1";
+        window.location.href = "index.html?expired=1";
     }
 }

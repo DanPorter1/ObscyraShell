@@ -1,6 +1,13 @@
 const email = document.getElementById("acc-email");
 const password = document.getElementById("acc-pass");
 const btnLogin = document.getElementById("acc-login");
+const accH1 = document.getElementById("acc-form-h1");
+const regLink = document.getElementById("reg-link");
+const logLink = document.getElementById("log-link");
+const logIn = document.getElementById("log-form");
+const regForm = document.getElementById("reg-form");
+const cookies = document.getElementById("cookies");
+const privacy = document.getElementById("privacy-policy");
 
 async function login() {
     const emailValue = email.value.trim();
@@ -36,7 +43,7 @@ async function login() {
 
     localStorage.setItem("authToken", data.token);
 
-    window.location.href = "index.html";
+    window.location.href = "to-do.html";
 }
 
 btnLogin.addEventListener("click", login);
@@ -46,3 +53,36 @@ password.addEventListener("keydown", (e) => {
     }
 })
 
+const token = localStorage.getItem("authToken");
+if (token) { 
+    accH1.textContent = "Logged In";
+    logIn.style.display = "none";
+}
+
+//TODO: Already Logged in logic 
+
+function accoutView(title, show) {
+    accH1.textContent = title;
+    logIn.style.display = "none";
+    regForm.style.display = "none";
+    privacy.style.display = "none";
+
+    show.style.display = "block";
+}
+
+regLink.addEventListener("click", () => {
+    accoutView("Register", regForm)
+
+});
+
+logLink.addEventListener("click", () => {
+    accoutView("Log In", logIn)
+});
+
+cookies.addEventListener("click", () => {
+    accoutView("Privacy Policy & Cookies", privacy)
+});
+
+document.getElementById("backLink").addEventListener("click", () => {
+    accoutView("Register", regForm)
+})
