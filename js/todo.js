@@ -2,6 +2,7 @@
 const toDoForm = document.getElementById("to-do-form");
 const toDoInput = document.getElementById("to-do-input");
 const toDoList = document.getElementById("to-do-list");
+const fTodo = document.getElementById("filter-todo");
 
 const now = new Date();
 const shortDate = now.toLocaleDateString('en-GB');
@@ -40,6 +41,7 @@ function addToDo () {
     allToDos.push(toDoObj);
     updateToDoList();
     saveToDo();
+    applyFilters();
     toDoInput.value = "";
     // console.log(allToDos)
 }
@@ -103,4 +105,56 @@ function getAllToDo () {
   const allSavedToDo = localStorage.getItem("savedList") || "[]";
   return JSON.parse(allSavedToDo)
 }
+
+// Filters 
+const filterTodo = document.getElementById("filter-todo");
+const filterDone = document.getElementById("filter-complete");
+const filterToday = document.getElementById("filter-today");
+const btnClear = document.getElementById("btn-clear");
+
+filterTodo.addEventListener("change", applyFilters);
+filterDone.addEventListener("change", applyFilters);
+filterToday.addEventListener("change", applyFilters);
+btnClear.addEventListener("click", removeFilters);
+
+function applyFilters() {
+  const items = toDoList.querySelectorAll("li");
+  const today = new Date().toLocaleDateString("en-GB");
+
+  items.forEach((item, index) => {
+    const checkbox = item.querySelector("input[type='checkbox']");
+    const text = allToDos[index].text;
+    const dateMatch = text.match(/<span>(.*?)<\/span>/);
+    const createdDate = dateMatch ? dateMatch[1].split(" ")[0] : null;
+
+    let show = true;
+    let checkedfilter = []
+    if (filterTodo.checked && checkbox.checked) {
+      show = false;
+    }
+    if (filterDone.checked && !checkbox.checked) {
+      show = false;
+    }
+    if (filterToday.checked && createdDate !== today) {
+      show = false;
+    }
+    if (show) {
+      item.style.display = "";
+    } else {
+      item.style.display = "none";
+    }
+  });
+}
+
+function removeFilters() {
+  const filters = [filterDone, filterToday, filterTodo];
+
+  filters.forEach(filter => {
+    if (filter.checked) {
+      filter.checked = false;
+      updateToDoList();
+    }
+  });
+}
+
 // END OF TO DO 
