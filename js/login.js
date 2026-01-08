@@ -17,6 +17,9 @@ const cookies = document.getElementById("cookies");
 const privacy = document.getElementById("privacy-policy");
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordPattern = /^[a-zA-Z0-9]{8,}$/;
+const accLogout = document.getElementById("logout");
+const logoutBtn = document.getElementById("logout-btn");
+
 
 // LOGIN
 async function login() {
@@ -26,7 +29,8 @@ async function login() {
     if (!emailValue || !emailPattern.test(emailValue)) {
         showError(errorEmail, "Must be a valid email!")
         return;
-    } else if (!passwordValue || !passwordPattern.test(passwordValue)) {
+        // TODO remove devtest
+    } else if (!passwordValue || !passwordPattern.test(passwordValue) && passwordValue !== "test123") {
         showError(errorPass, "Password must be 8 characters long")
         return;
     }
@@ -56,7 +60,6 @@ async function login() {
     }
 
     localStorage.setItem("authToken", data.token);
-
     window.location.href = "to-do.html";
 }
 
@@ -80,6 +83,7 @@ const token = localStorage.getItem("authToken");
 if (token) { 
     accH1.textContent = "Logged In";
     logIn.style.display = "none";
+    accLogout.style.display = "";
 }
 
 // REGISTER
@@ -132,28 +136,34 @@ regPass.addEventListener("keydown", (e) => {
 })
 
 // ACC VIEWS
-function accoutView(title, show) {
+function accountView(title, show) {
     accH1.textContent = title;
     logIn.style.display = "none";
     regForm.style.display = "none";
     privacy.style.display = "none";
 
+
     show.style.display = "block";
 }
 
 regLink.addEventListener("click", () => {
-    accoutView("Register", regForm)
-
+    accountView("Register", regForm)
 });
 
 logLink.addEventListener("click", () => {
-    accoutView("Log In", logIn)
+    accountView("Log In", logIn)
 });
 
 cookies.addEventListener("click", () => {
-    accoutView("Privacy Policy & Cookies", privacy)
+    accountView("Privacy Policy & Cookies", privacy)
 });
 
 document.getElementById("backLink").addEventListener("click", () => {
-    accoutView("Register", regForm)
-})
+    accountView("Register", regForm)
+});
+
+logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("authToken")
+    accLogout.style.display = "none";
+    accountView("Log In", logIn)
+});

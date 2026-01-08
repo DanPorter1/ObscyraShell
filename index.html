@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="js/nav.js" defer></script>
+    <script src="js/nav.js"></script>
     <title>Obscyra Shell</title>
 </head>
 <body>
@@ -94,7 +94,7 @@
             </div>
             <div class="cookie-wrapper" id="privacy-policy" style="display: none;">
                 <p>
-                    We keep things simple: no tracking, no advertising cookies, and no third-party analytics.
+                    <strong>We keep things simple:</strong> no tracking, no advertising cookies, and no third-party analytics.
                     This page explains what data we store and how it's used.
                 </p>
 
@@ -136,6 +136,14 @@
                 </p>
 
                 <br><p> <a id="backLink">Go Back</a></p><br><br>
+            </div>
+            <div class="logout-wrapper" id="logout" style="display: none;">
+                <div>
+                    <p>Account will be auto logged out after 1 hour</p>
+                </div>
+                <form>
+                    <input type="button" value="Log Out" class="submit-btn" id="logout-btn">
+                </form>
             </div>
             </div>
         </section>

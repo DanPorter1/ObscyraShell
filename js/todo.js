@@ -1,4 +1,3 @@
-// TODO
 const toDoForm = document.getElementById("to-do-form");
 const toDoInput = document.getElementById("to-do-input");
 const toDoList = document.getElementById("to-do-list");
