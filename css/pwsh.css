@@ -1,0 +1,79 @@
+:root {
+    --primary-color: #081525;
+    --text-color: #53abd4;    
+    --background-color: #09181d;
+    --background-color-main: #274c5e;
+    --white-color: #fefefe;
+    --highlight-color: #a6926d;
+    --text-1: #f0f0f0;
+    --text-2: #00ffff;
+    --text-3: #66ccff;
+    --text-4: #ffcc66;
+    --text-5: #cccccc;
+}
+
+
+/* Powershell */
+.pwsh-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: auto;
+    text-align: center;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.pwsh-wrapper h1 {
+    margin-top: 100px;
+    margin-bottom: 20px;
+    font-size: 3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.pwsh-wrapper h2 {
+    font-size: 2rem;
+}
+
+
+/* Commands */
+.ps-commands {
+    padding: 2vh;
+}
+
+.ps-commands .psection {
+    margin-bottom: 1.2rem;
+}
+
+.psection-head {
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 1.5rem;
+}
+
+.psection-body { 
+    margin-top: 1rem;
+    max-height: 0; 
+    overflow: hidden; 
+    transition: max-height 0.8s ease;
+    line-height: 1.4;
+    padding: 0.3rem 0;
+} 
+
+.psection.open .psection-body { 
+    max-height: 1000px;
+}
+
+.psection-body p {
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+}
+
+.psection-body li {
+    margin-bottom: 0.3rem;
+}

@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Service Desk Toolkit & Case Notes Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-main: #050509;
+      --bg-panel: #0b0b12;
+      --bg-panel-alt: #101018;
+      --accent: #4fd1c5;
+      --accent-soft: rgba(79, 209, 197, 0.15);
+      --border: #232334;
+      --border-soft: #151520;
+      --text-main: #f5f5ff;
+      --text-soft: #a3a3c2;
+      --text-muted: #6c6c86;
+      --danger: #f56565;
+      --warning: #ecc94b;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow-soft: 0 14px 40px rgba(0, 0, 0, 0.55);
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.5);
+      --transition-fast: 0.16s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at top, #151520 0, #050509 55%, #020205 100%);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 16px;
+      width: 100%;
+      /* max-width: 1200px; */
+      height: 100%;
+      /* max-height: 720px; */
+      background: linear-gradient(135deg, rgba(79, 209, 197, 0.08), rgba(99, 102, 241, 0.04));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top left, #181827, #0b0b12 45%, #050509 100%);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 12px;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px;
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle at top right, rgba(79, 209, 197, 0.16), transparent 55%);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .sidebar-subtitle {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .sidebar-description {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin: 6px 4px;
+    }
+
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 4px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.3));
+    }
+
+    .nav-button {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 13px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform 80ms ease-out;
+    }
+
+    .nav-button span.icon {
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .nav-button-primary {
+      background: radial-gradient(circle at left, rgba(79, 209, 197, 0.16), transparent 55%);
+      border-color: rgba(79, 209, 197, 0.35);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-button:hover {
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(79, 209, 197, 0.3);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .nav-button.active {
+      background: linear-gradient(135deg, rgba(79, 209, 197, 0.25), rgba(99, 102, 241, 0.25));
+      border-color: rgba(79, 209, 197, 0.75);
+      color: var(--text-main);
+      box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.2);
+    }
+
+    .sidebar-footnote {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 8px;
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), transparent 65%);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    /* Main Panel */
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top right, #151520, #050509 55%);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(120deg, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.5));
+      border: 1px solid var(--border);
+    }
+
+    .main-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .main-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .main-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .main-header-right {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tag-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 209, 197, 0.5);
+      color: var(--accent);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .tag-pill-alt {
+      border-color: rgba(129, 140, 248, 0.6);
+      color: #a5b4fc;
+    }
+
+    .main-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 960px) {
+      .shell {
+        grid-template-columns: 1fr;
+        max-height: none;
+      }
+
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.65));
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .panel-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .chip {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.8);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    /* Controls */
+
+    .field-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field-label span.hint {
+      color: var(--text-muted);
+      font-size: 10px;
+    }
+
+    textarea,
+    input,
+    select {
+      width: 100%;
+      background: #020207;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 12px;
+      padding: 6px 7px;
+      font-family: var(--font-mono);
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform 80ms ease-out;
+    }
+
+    textarea:focus,
+    input:focus,
+    select:focus {
+      border-color: rgba(79, 209, 197, 0.75);
+      box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.3);
+      background: #050513;
+      transform: translateY(-0.5px);
+    }
+
+    textarea.mono {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: pre;
+    }
+
+    .row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .row > * {
+      flex: 1;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(17, 24, 39, 0.95);
+      color: var(--text-soft);
+      font-size: 11px;
+      padding: 4px 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform 80ms ease-out;
+    }
+
+    .btn:hover {
+      background: rgba(31, 41, 55, 0.95);
+      color: var(--text-main);
+      border-color: rgba(79, 209, 197, 0.8);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-primary {
+      border-color: rgba(79, 209, 197, 0.9);
+      background: radial-gradient(circle at top, rgba(79, 209, 197, 0.25), rgba(17, 24, 39, 0.95));
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .btn-danger {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+    }
+
+    .btn-ghost {
+      border-color: transparent;
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: rgba(79, 209, 197, 0.45);
+      color: var(--text-main);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      color: var(--text-muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.25);
+    }
+
+    .badge-dot-warn {
+      background: var(--warning);
+      box-shadow: 0 0 0 3px rgba(236, 201, 75, 0.25);
+    }
+
+    .badge-dot-danger {
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25);
+    }
+
+    .pill-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .pill-status.ok {
+      color: var(--accent);
+      border-color: rgba(79, 209, 197, 0.8);
+    }
+
+    .pill-status.warn {
+      color: #fde68a;
+      border-color: rgba(236, 201, 75, 0.8);
+    }
+
+    .pill-status.bad {
+      color: #fecaca;
+      border-color: rgba(248, 113, 113, 0.8);
+    }
+
+    /* Lists, cards */
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tool-card {
+      padding: 6px 7px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.85);
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .tool-card-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .tool-card-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .tool-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .commands-list {
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .command-row {
+      padding: 5px 7px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .command-row:last-child {
+      border-bottom: none;
+    }
+
+    .command-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .command-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .note-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .note-checklist label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: var(--text-soft);
+    }
+
+    .note-checklist input[type="checkbox"] {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: #020207;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+    }
+
+    .note-checklist input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: rgba(79, 209, 197, 0.9);
+    }
+
+    .note-checklist input[type="checkbox"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      width: 5px;
+      height: 8px;
+      border: solid #020207;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .note-score {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .note-score strong {
+      color: var(--accent);
+    }
+
+    .note-score.bad strong {
+      color: var(--danger);
+    }
+
+    .note-score.ok strong {
+      color: var(--warning);
+    }
+
+    .note-score.good strong {
+      color: var(--accent);
+    }
+
+    /* ------------------------------
+   TO‑DO LIST — OBSCYRA STYLE
+   ------------------------------ */
+
+    .to-do-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    }
+
+    .to-do {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(79, 209, 197, 0.25);
+    border-radius: 8px;
+    backdrop-filter: blur(6px);
+    transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .to-do:hover {
+    background: rgba(15, 23, 42, 0.75);
+    border-color: rgba(79, 209, 197, 0.45);
+    }
+
+    .to-do input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(79, 209, 197, 0.5);
+    border-radius: 4px;
+    background: rgba(2, 2, 7, 0.8);
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .to-do input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+    }
+
+    .to-do input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #020207;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    }
+
+    .to-do-text {
+    flex: 1;
+    color: var(--text-main);
+    font-size: 13px;
+    line-height: 1.4;
+    }
+
+    .to-do-text span {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 6px;
+    background: rgba(79, 209, 197, 0.15);
+    color: var(--accent);
+    }
+
+    .to-do-delete-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    }
+
+    .to-do-delete-btn:hover {
+    background: rgba(248, 113, 113, 0.15);
+    }
+
+    .to-do-delete-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #fca5a5;
+    }
+
+    /* Filter row */
+    .button-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-soft);
+    }
+
+    .button-row input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    appearance: none;
+    border: 1px solid rgba(79, 209, 197, 0.4);
+    border-radius: 4px;
+    background: rgba(2, 2, 7, 0.8);
+    cursor: pointer;
+    }
+
+    .button-row input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+    }
+
+    .btn-small {
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    }
+
+    .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 6px;
+    }
+
+    .filter-row input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    appearance: none;
+    border: 1px solid rgba(79, 209, 197, 0.4);
+    border-radius: 4px;
+    background: rgba(2, 2, 7, 0.8);
+    cursor: pointer;
+    }
+
+    .filter-row input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+    }
+
+    /* Universal checkbox styling for inline alignment */
+    input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    appearance: none;
+    border: 1px solid rgba(79, 209, 197, 0.4);
+    border-radius: 4px;
+    background: rgba(2, 2, 7, 0.8);
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 6px;
+    position: relative;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+    }
+
+    input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    width: 4px;
+    height: 8px;
+    border: solid #020207;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    }
+
+    /* Acc Login */
+    /* Login wrapper */
+.login-wrapper {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(79, 209, 197, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 40px rgba(79, 209, 197, 0.1);
+}
+
+/* Form fields */
+.acc-form label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+
+.acc-form input[type="text"],
+.acc-form input[type="password"] {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  background: #020207;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.acc-form input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.3);
+}
+
+/* Submit buttons */
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: radial-gradient(circle at top left, rgba(79, 209, 197, 0.25), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(79, 209, 197, 0.5);
+  color: var(--accent);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: rgba(79, 209, 197, 0.35);
+  border-color: var(--accent);
+}
+
+/* Error messages */
+.error-msg {
+  font-size: 11px;
+  color: #fca5a5;
+  margin-top: -4px;
+  margin-bottom: 6px;
+}
+
+/* Info links */
+#acc-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+#acc-info a,
+#acc-info p {
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#acc-info a:hover,
+#acc-info p:hover {
+  color: var(--accent);
+}
+
+/* Privacy policy */
+.cookie-wrapper {
+  font-size: 13px;
+  color: var(--text-soft);
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  backdrop-filter: blur(6px);
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="shell" id="shell-root">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Obscyra Shell</div>
+        <div class="sidebar-subtitle">Service Desk Workspace</div>
+        <div class="sidebar-description">
+          Toolkit and note assistant for fast, consistent triage across isolated networks.
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Mode</div>
+        <div class="nav-group">
+          <button class="nav-button nav-button-primary active" data-mode="toolkit">
+            <span class="icon">🧰</span>
+            <span>Service Desk Toolkit</span>
+          </button>
+          <button class="nav-button" data-mode="notes">
+            <span class="icon">📝</span>
+            <span>Case Notes Assistant</span>
+          </button>
+        <button class="nav-button" data-mode="todo"> 
+            <span class="icon">📋</span> 
+            <span>To‑Do List</span>
+        </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Toolkit focus</div>
+        <div class="nav-group">
+          <button class="nav-button" data-tool-focus="text">
+            <span class="icon">✨</span>
+            <span>Text & Data helpers</span>
+          </button>
+          <button class="nav-button" data-tool-focus="network">
+            <span class="icon">🌐</span>
+            <span>Network maths & commands</span>
+          </button>
+          <button class="nav-button" data-tool-focus="logs">
+            <span class="icon">📂</span>
+            <span>Logs & errors</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-footnote">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <span>Isolated network aware</span>
+          <span class="badge">
+            <span class="badge-dot"></span>
+            Local only
+          </span>
+        </div>
+        <div style="font-size:10px;">
+          No live probes. Everything runs client side and is safe for protected environments.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="main-header">
+        <div class="main-header-left">
+          <div class="main-title" id="main-title">Service Desk Toolkit</div>
+          <div class="main-subtitle" id="main-subtitle">
+            Swiss‑army utility panel for triage, formatting, and quick customer commands.
+          </div>
+        </div>
+        <div class="main-header-right">
+          <div class="tag-pill">
+            🧩 Modular tools
+          </div>
+          <div class="tag-pill tag-pill-alt">
+            🔒 No external calls
+          </div>
+        </div>
+      </header>
+
+      <section class="main-content" id="main-content">
+        <!-- Left panel: will be replaced depending on mode -->
+        <section class="panel" id="primary-panel">
+          <!-- Toolkit: text/data tools -->
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Text & data helpers</div>
+              <div class="panel-subtitle">Format, encode, decode and clean without leaving the shell.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Stateless</span>
+              <span class="chip">Local-only</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Input</span>
+              <span class="hint" id="input-hint">Paste JSON, text, URL, Base64…</span>
+            </div>
+            <textarea id="tool-input" class="mono" placeholder="{ &quot;example&quot;: true }"></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="btn btn-primary" data-action="json-format">JSON format</button>
+            <button class="btn" data-action="url-encode">URL encode</button>
+            <button class="btn" data-action="url-decode">URL decode</button>
+            <button class="btn" data-action="b64-encode">Base64 encode</button>
+            <button class="btn" data-action="b64-decode">Base64 decode</button>
+            <button class="btn" data-action="trim-lines">Trim whitespace</button>
+            <button class="btn" data-action="clear-input">Clear</button>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Output</span>
+              <span class="hint" id="output-hint">Results appear here. Nothing is sent anywhere.</span>
+            </div>
+            <textarea id="tool-output" class="mono" placeholder="// Output will appear here"></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="btn" data-action="copy-output">Copy output</button>
+          </div>
+        </section>
+
+        <!-- Right panel -->
+        <section class="panel" id="secondary-panel">
+          <!-- Toolkit: password generator + quick tools -->
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Quick utilities</div>
+              <div class="panel-subtitle">Passwords, UUIDs, timestamps, and more.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Low-friction</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>Password generator</span>
+                <span class="hint">Client-side, random-ish. Not cryptographically perfect.</span>
+              </div>
+              <div class="row">
+                <div>
+                  <input id="pw-length" type="number" min="8" max="64" value="16" />
+                </div>
+                <div class="button-row">
+                  <button class="btn btn-primary" data-action="generate-password">Generate</button>
+                  <button class="btn" data-action="copy-password">Copy</button>
+                </div>
+              </div>
+              <textarea id="pw-output" class="mono" style="min-height:40px;" readonly></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>UUID v4 (pseudo)</span>
+              </div>
+              <div class="button-row">
+                <button class="btn" data-action="generate-uuid">Generate UUID</button>
+                <button class="btn" data-action="copy-uuid">Copy</button>
+              </div>
+              <textarea id="uuid-output" class="mono" style="min-height:40px;" readonly></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>Unix timestamp</span>
+                <span class="hint">Now ↔ human date</span>
+              </div>
+              <div class="row">
+                <input id="timestamp-input" type="text" placeholder="Enter timestamp or leave blank for now" />
+                <button class="btn" data-action="timestamp-convert">Convert</button>
+              </div>
+              <textarea id="timestamp-output" class="mono" style="min-height:40px;" readonly></textarea>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const $ = (sel, root = document) => root.querySelector(sel);
+      const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+      const state = {
+        mode: "toolkit", // "toolkit" | "notes"
+        toolFocus: "text" // "text" | "network" | "logs"
+      };
+
+      /* -------------------------------
+       * Sidebar: mode switching
+       * ----------------------------- */
+
+      const mainTitleEl = $("#main-title");
+      const mainSubtitleEl = $("#main-subtitle");
+      const mainContentEl = $("#main-content");
+      const primaryPanelEl = $("#primary-panel");
+      const secondaryPanelEl = $("#secondary-panel");
+
+    function setMode(mode) {
+        if (state.mode === mode) return;
+        state.mode = mode;
+
+        // Update sidebar button highlighting
+        $$(".nav-button[data-mode]").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.mode === mode);
+        });
+
+        if (mode === "toolkit") {
+            mainTitleEl.textContent = "Service Desk Toolkit";
+            mainSubtitleEl.textContent = "Swiss‑army utility panel for triage, formatting, and quick customer commands.";
+            renderToolkitLayout();
+        }
+
+        else if (mode === "notes") {
+            mainTitleEl.textContent = "Case Notes Assistant";
+            mainSubtitleEl.textContent = "Templates, structure and self-checks for consistent, clear case documentation.";
+            renderNotesLayout();
+        }
+
+        else if (mode === "todo") {
+            mainTitleEl.textContent = "To‑Do List";
+            mainSubtitleEl.textContent = "Track tasks, timestamps, and filters inside the shell.";
+            renderTodoLayout();   // ← THIS is the missing part
+        }
+        }
+
+      function setToolFocus(focus) {
+        state.toolFocus = focus;
+        $$(".nav-button[data-tool-focus]").forEach(btn => {
+          const isActive = btn.dataset.toolFocus === focus;
+          btn.classList.toggle("active", isActive);
+        });
+
+        if (state.mode === "toolkit") {
+          renderToolkitLayout();
+        }
+      }
+
+      $$(".nav-button[data-mode]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          setMode(btn.dataset.mode);
+        });
+      });
+
+      $$(".nav-button[data-tool-focus]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          setToolFocus(btn.dataset.toolFocus);
+        });
+      });
+
+      /* -------------------------------
+       * Toolkit layouts
+       * ----------------------------- */
+
+      function renderToolkitLayout() {
+        if (state.toolFocus === "text") {
+          renderToolkitText();
+        } else if (state.toolFocus === "network") {
+          renderToolkitNetwork();
+        } else {
+          renderToolkitLogs();
+        }
+      }
+
+      function renderToolkitText() {
+        primaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Text & data helpers</div>
+              <div class="panel-subtitle">Format, encode, decode and clean without leaving the shell.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Stateless</span>
+              <span class="chip">Local-only</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Input</span>
+              <span class="hint" id="input-hint">Paste JSON, text, URL, Base64…</span>
+            </div>
+            <textarea id="tool-input" class="mono" placeholder="{ &quot;example&quot;: true }"></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="btn btn-primary" data-action="json-format">JSON format</button>
+            <button class="btn" data-action="url-encode">URL encode</button>
+            <button class="btn" data-action="url-decode">URL decode</button>
+            <button class="btn" data-action="b64-encode">Base64 encode</button>
+            <button class="btn" data-action="b64-decode">Base64 decode</button>
+            <button class="btn" data-action="trim-lines">Trim whitespace</button>
+            <button class="btn" data-action="clear-input">Clear</button>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Output</span>
+              <span class="hint" id="output-hint">Results appear here. Nothing is sent anywhere.</span>
+            </div>
+            <textarea id="tool-output" class="mono" placeholder="// Output will appear here"></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="btn" data-action="copy-output">Copy output</button>
+          </div>
+        `;
+
+        secondaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Quick utilities</div>
+              <div class="panel-subtitle">Passwords, UUIDs, timestamps, and more.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Low-friction</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>Password generator</span>
+                <span class="hint">Client-side, random-ish. Not cryptographically perfect.</span>
+              </div>
+              <div class="row">
+                <div>
+                  <input id="pw-length" type="number" min="8" max="64" value="16" />
+                </div>
+                <div class="button-row">
+                  <button class="btn btn-primary" data-action="generate-password">Generate</button>
+                  <button class="btn" data-action="copy-password">Copy</button>
+                </div>
+              </div>
+              <textarea id="pw-output" class="mono" style="min-height:40px;" readonly></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>UUID v4 (pseudo)</span>
+              </div>
+              <div class="button-row">
+                <button class="btn" data-action="generate-uuid">Generate UUID</button>
+                <button class="btn" data-action="copy-uuid">Copy</button>
+              </div>
+              <textarea id="uuid-output" class="mono" style="min-height:40px;" readonly></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>Unix timestamp</span>
+                <span class="hint">Now ↔ human date</span>
+              </div>
+              <div class="row">
+                <input id="timestamp-input" type="text" placeholder="Enter timestamp or leave blank for now" />
+                <button class="btn" data-action="timestamp-convert">Convert</button>
+              </div>
+              <textarea id="timestamp-output" class="mono" style="min-height:40px;" readonly></textarea>
+            </div>
+          </div>
+        `;
+
+        bindToolkitEvents();
+      }
+
+      function renderToolkitNetwork() {
+        primaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Network maths & planning</div>
+              <div class="panel-subtitle">Subnets, CIDR, throughput estimations without live probes.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Advisory</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>CIDR / subnet helper</span>
+                <span class="hint">Quick reference for IPv4 blocks.</span>
+              </div>
+              <div class="row">
+                <input id="cidr-input" type="text" placeholder="e.g. 192.168.1.0/24" />
+                <button class="btn btn-primary" data-action="cidr-calc">Calculate</button>
+              </div>
+              <textarea id="cidr-output" class="mono" style="min-height:80px;" readonly placeholder="// Network address, range, size…"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="field-label">
+                <span>Bandwidth estimator</span>
+                <span class="hint">Rough check: users × kbps.</span>
+              </div>
+              <div class="row">
+                <input id="bw-users" type="number" min="1" placeholder="Users" />
+                <input id="bw-per-user" type="number" min="1" placeholder="kbps per user" />
+                <button class="btn" data-action="bw-calc">Estimate</button>
+              </div>
+              <textarea id="bw-output" class="mono" style="min-height:60px;" readonly></textarea>
+            </div>
+          </div>
+        `;
+
+        secondaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Command library</div>
+              <div class="panel-subtitle">Quick-copy probes for customers to run locally.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Customer-side</span>
+            </div>
+          </div>
+
+          <div class="field-label">
+            <span>Platform</span>
+          </div>
+          <div class="button-row">
+            <button class="btn btn-primary" data-platform="win">Windows</button>
+            <button class="btn" data-platform="nix">macOS / Linux</button>
+          </div>
+
+          <div class="commands-list" id="commands-list"></div>
+        `;
+
+        bindToolkitNetworkEvents();
+      }
+
+      function renderToolkitLogs() {
+        primaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Log beautifier</div>
+              <div class="panel-subtitle">Indent, align and scan structured text or JSON-like logs.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Readability</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Raw logs</span>
+              <span class="hint">Paste unformatted or messy output.</span>
+            </div>
+            <textarea id="log-input" class="mono" placeholder="[2024-01-01 10:00:00] ERROR ..."></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="btn btn-primary" data-action="log-indent">Indent JSON-like</button>
+            <button class="btn" data-action="log-align-equals">Align key=value</button>
+            <button class="btn" data-action="log-clear">Clear</button>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Beautified</span>
+            </div>
+            <textarea id="log-output" class="mono" placeholder="// Aligned / formatted logs here"></textarea>
+          </div>
+        `;
+
+        secondaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Error hints</div>
+              <div class="panel-subtitle">Quick-reference for common connectivity messages.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Static</span>
+            </div>
+          </div>
+
+          <div class="tool-grid">
+            <div class="tool-card">
+              <div class="tool-card-title">DNS_PROBE_FINISHED_NXDOMAIN</div>
+              <div class="tool-card-meta">
+                Browser couldn't resolve the hostname. Likely DNS, typo, or split-horizon issue.
+              </div>
+              <div class="tool-card-footer">
+                <span class="badge">
+                  <span class="badge-dot-warn"></span>
+                  DNS
+                </span>
+              </div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-card-title">SSL certificate error</div>
+              <div class="tool-card-meta">
+                Check date/time, corporate SSL inspection, and whether internal CA needs to be trusted.
+              </div>
+              <div class="tool-card-footer">
+                <span class="badge">
+                  <span class="badge-dot-warn"></span>
+                  TLS
+                </span>
+              </div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-card-title">Connection timed out</div>
+              <div class="tool-card-meta">
+                Firewalls, routing, or service offline. Ask for VPN state and whether other sites respond.
+              </div>
+              <div class="tool-card-footer">
+                <span class="badge">
+                  <span class="badge-dot-danger"></span>
+                  Reachability
+                </span>
+              </div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-card-title">401 / 403</div>
+              <div class="tool-card-meta">
+                Auth or permission issue. Check account, SSO state, stale cookies, or MFA prompts.
+              </div>
+              <div class="tool-card-footer">
+                <span class="badge">
+                  <span class="badge-dot-warn"></span>
+                  Access
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        bindToolkitLogEvents();
+      }
+
+      /* -------------------------------
+       * Notes layout
+       * ----------------------------- */
+
+      function renderNotesLayout() {
+        primaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Case note workspace</div>
+              <div class="panel-subtitle">Templates and helpers so every ticket reads like your best agent wrote it.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Structure</span>
+              <span class="chip">Consistency</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Template</span>
+              <span class="hint">Pick a starting pattern or work freeform.</span>
+            </div>
+            <div class="row">
+              <select id="note-template">
+                <option value="">— No template —</option>
+                <option value="connectivity">Connectivity issue</option>
+                <option value="login">Login / authentication</option>
+                <option value="performance">Performance / slowness</option>
+                <option value="vpn">VPN / remote access</option>
+                <option value="escalation">Escalation to Tier 2</option>
+              </select>
+              <button class="btn" data-action="apply-template">Apply template</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">
+              <span>Case notes</span>
+              <span class="hint">Write as you normally would; use tools to tighten.</span>
+            </div>
+            <textarea id="note-body" class="mono" placeholder="Summary:
+Customer impact:
+Timeline:
+Steps taken:
+Findings:
+Next actions:"></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="btn btn-primary" data-action="note-copy">Copy notes</button>
+            <button class="btn" data-action="note-normalise">Normalise spacing</button>
+            <button class="btn" data-action="note-summary">Add one-line summary prefix</button>
+            <button class="btn btn-danger" data-action="note-clear">Clear</button>
+          </div>
+        `;
+
+        secondaryPanelEl.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Self-check & prompts</div>
+              <div class="panel-subtitle">Checklist, scoring, and suggested clarification questions.</div>
+            </div>
+            <div class="panel-actions">
+              <span class="chip">Lightweight</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="field-label">
+              <span>Checklist</span>
+              <span class="hint">Tick as you cover each area.</span>
+            </div>
+            <div class="note-checklist" id="note-checklist">
+              <label><input type="checkbox" data-weight="2" /> Clear summary of the issue</label>
+              <label><input type="checkbox" data-weight="1" /> Customer impact described</label>
+              <label><input type="checkbox" data-weight="2" /> Steps taken listed in order</label>
+              <label><input type="checkbox" data-weight="1" /> Tools/commands mentioned where relevant</label>
+              <label><input type="checkbox" data-weight="2" /> Current status and next action</label>
+              <label><input type="checkbox" data-weight="1" /> Customer expectations set (ETA / follow-up)</label>
+              <label><input type="checkbox" data-weight="1" /> Environment details (OS, location, network) if relevant</label>
+            </div>
+            <div class="note-score" id="note-score" style="margin-top:6px;">
+              Score: <strong>0 / 10</strong> — Start with a clear summary and the customer impact.
+            </div>
+          </div>
+
+          <div style="margin-top:8px;">
+            <div class="field-label">
+              <span>Suggested questions</span>
+              <span class="hint">Adjust by scenario.</span>
+            </div>
+            <select id="question-context">
+              <option value="generic">Generic issue</option>
+              <option value="connectivity">Connectivity / reachability</option>
+              <option value="login">Login / authentication</option>
+              <option value="vpn">VPN / remote access</option>
+              <option value="performance">Performance / slowness</option>
+            </select>
+            <textarea id="question-output" class="mono" style="min-height:80px;margin-top:4px;" readonly></textarea>
+          </div>
+
+          <div style="margin-top:6px;" class="button-row">
+            <button class="btn" data-action="questions-refresh">Refresh questions</button>
+            <button class="btn" data-action="questions-copy">Copy questions</button>
+          </div>
+        `;
+
+        bindNotesEvents();
+      }
+
+      function renderTodoLayout() {
+        primaryPanelEl.innerHTML = `
+            <div class="panel-header">
+            <div>
+                <div class="panel-title">Your Tasks</div>
+                <div class="panel-subtitle">Add, complete, filter, and manage tasks.</div>
+            </div>
+            <div class="panel-actions">
+                <span class="chip">Local storage</span>
+            </div>
+            </div>
+
+            <form id="to-do-form" class="row">
+            <input id="to-do-input" type="text" placeholder="Add a new task…" />
+            <button class="btn btn-primary" type="submit">Add</button>
+            </form>
+
+            <div class="filter-row" style="margin-top:6px;">
+            <label><input type="checkbox" id="filter-todo"> Hide completed</label>
+            <label><input type="checkbox" id="filter-complete"> Show only completed</label>
+            <label><input type="checkbox" id="filter-today"> Today only</label>
+            <button class="btn btn-small" id="btn-clear">Clear filters</button>
+            </div>
+
+            <ul id="to-do-list" class="to-do-list"></ul>
+        `;
+
+        secondaryPanelEl.innerHTML = `
+            <div class="panel-header">
+            <div>
+                <div class="panel-title">Task Info</div>
+                <div class="panel-subtitle">Your tasks are saved automatically.</div>
+            </div>
+            <div class="panel-actions">
+                <span class="chip">Persistent</span>
+            </div>
+            </div>
+
+            <div class="tool-card">
+            <div class="tool-card-title">How it works</div>
+            <div class="tool-card-meta">
+                Tasks are stored in localStorage and persist across sessions.
+            </div>
+            </div>
+        `;
+
+        bindTodoEvents();
+        }
+
+
+      /* -------------------------------
+       * Toolkit logic
+       * ----------------------------- */
+
+      function bindToolkitEvents() {
+        const input = $("#tool-input");
+        const output = $("#tool-output");
+
+        const actionHandlers = {
+          "json-format": () => {
+            if (!input.value.trim()) {
+              output.value = "";
+              return;
+            }
+            try {
+              const parsed = JSON.parse(input.value);
+              output.value = JSON.stringify(parsed, null, 2);
+            } catch (e) {
+              output.value = "// JSON parse error: " + e.message;
+            }
+          },
+          "url-encode": () => {
+            output.value = encodeURIComponent(input.value);
+          },
+          "url-decode": () => {
+            try {
+              output.value = decodeURIComponent(input.value);
+            } catch (e) {
+              output.value = "// URL decode error: " + e.message;
+            }
+          },
+          "b64-encode": () => {
+            try {
+              output.value = btoa(input.value);
+            } catch (e) {
+              output.value = "// Base64 encode error (ensure plain text): " + e.message;
+            }
+          },
+          "b64-decode": () => {
+            try {
+              output.value = atob(input.value);
+            } catch (e) {
+              output.value = "// Base64 decode error: " + e.message;
+            }
+          },
+          "trim-lines": () => {
+            const lines = input.value.split("\n").map(l => l.trimEnd());
+            output.value = lines.join("\n").trim();
+          },
+          "clear-input": () => {
+            input.value = "";
+            output.value = "";
+          },
+          "copy-output": () => {
+            if (!output.value) return;
+            navigator.clipboard && navigator.clipboard.writeText(output.value).catch(() => {});
+          }
+        };
+
+        $$(".btn[data-action]").forEach(btn => {
+          const action = btn.dataset.action;
+          if (!actionHandlers[action]) return;
+          btn.addEventListener("click", () => actionHandlers[action]());
+        });
+
+        // Quick utilities
+        const pwOut = $("#pw-output");
+        const uuidOut = $("#uuid-output");
+        const tsInput = $("#timestamp-input");
+        const tsOutput = $("#timestamp-output");
+
+        function generatePassword() {
+          const lengthInput = $("#pw-length");
+          let len = parseInt(lengthInput.value, 10);
+          if (isNaN(len) || len < 8) len = 8;
+          if (len > 64) len = 64;
+          const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{};:,.?";
+          let pw = "";
+          for (let i = 0; i < len; i++) {
+            const idx = Math.floor(Math.random() * chars.length);
+            pw += chars[idx];
+          }
+          pwOut.value = pw;
+        }
+
+        function generateUUID() {
+          function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+          }
+          const uuid = `${s4()}${s4()}-${s4()}-4${s4().substring(1)}-${((Math.random() * 4) | 8).toString(16)}${s4().substring(1)}-${s4()}${s4()}${s4()}`;
+          uuidOut.value = uuid;
+        }
+
+        function convertTimestamp() {
+          const raw = tsInput.value.trim();
+          if (!raw) {
+            const now = new Date();
+            const unix = Math.floor(now.getTime() / 1000);
+            tsOutput.value = `Now (Unix): ${unix}\nLocal: ${now.toString()}`;
+            return;
+          }
+          const n = Number(raw);
+          if (!Number.isNaN(n)) {
+            const ms = raw.length <= 10 ? n * 1000 : n;
+            const d = new Date(ms);
+            if (isNaN(d.getTime())) {
+              tsOutput.value = "// Invalid timestamp";
+            } else {
+              tsOutput.value = `Unix: ${Math.floor(ms / 1000)}\nLocal: ${d.toString()}`;
+            }
+          } else {
+            const d = new Date(raw);
+            if (isNaN(d.getTime())) {
+              tsOutput.value = "// Could not parse date string";
+            } else {
+              tsOutput.value = `Local: ${d.toString()}\nUnix: ${Math.floor(d.getTime() / 1000)}`;
+            }
+          }
+        }
+
+        const quickHandlers = {
+          "generate-password": generatePassword,
+          "copy-password": () => {
+            if (!pwOut.value) return;
+            navigator.clipboard && navigator.clipboard.writeText(pwOut.value).catch(() => {});
+          },
+          "generate-uuid": generateUUID,
+          "copy-uuid": () => {
+            if (!uuidOut.value) return;
+            navigator.clipboard && navigator.clipboard.writeText(uuidOut.value).catch(() => {});
+          },
+          "timestamp-convert": convertTimestamp
+        };
+
+        $$(".btn[data-action]").forEach(btn => {
+          const action = btn.dataset.action;
+          if (!quickHandlers[action]) return;
+          btn.addEventListener("click", () => quickHandlers[action]());
+        });
+      }
+
+      function bindToolkitNetworkEvents() {
+        const cidrInput = $("#cidr-input");
+        const cidrOutput = $("#cidr-output");
+        const bwUsers = $("#bw-users");
+        const bwPerUser = $("#bw-per-user");
+        const bwOutput = $("#bw-output");
+        const commandsList = $("#commands-list");
+
+        function parseCIDR(cidr) {
+          const parts = cidr.split("/");
+          if (parts.length !== 2) return null;
+          const ip = parts[0].split(".");
+          const prefix = parseInt(parts[1], 10);
+          if (ip.length !== 4 || prefix < 0 || prefix > 32) return null;
+          const nums = ip.map(x => {
+            const n = parseInt(x, 10);
+            return Number.isNaN(n) || n < 0 || n > 255 ? null : n;
+          });
+          if (nums.some(n => n === null)) return null;
+          let addr = 0;
+          nums.forEach(oct => {
+            addr = (addr << 8) + oct;
+          });
+          const mask = prefix === 0 ? 0 : (~0 << (32 - prefix)) >>> 0;
+          const network = addr & mask;
+          const broadcast = network | (~mask >>> 0);
+          function toIP(num) {
+            return [
+              (num >>> 24) & 0xff,
+              (num >>> 16) & 0xff,
+              (num >>> 8) & 0xff,
+              num & 0xff
+            ].join(".");
+          }
+          const total = prefix === 32 ? 1 : Math.pow(2, 32 - prefix);
+          const usable = prefix >= 31 ? total : Math.max(0, total - 2);
+          return {
+            prefix,
+            mask,
+            network,
+            broadcast,
+            networkIP: toIP(network),
+            broadcastIP: toIP(broadcast),
+            total,
+            usable
+          };
+        }
+
+        function handleCIDRCalc() {
+          const raw = cidrInput.value.trim();
+          if (!raw) {
+            cidrOutput.value = "";
+            return;
+          }
+          const res = parseCIDR(raw);
+          if (!res) {
+            cidrOutput.value = "// Invalid CIDR. Use form: 192.168.1.0/24";
+            return;
+          }
+          const maskIP = [
+            (res.mask >>> 24) & 0xff,
+            (res.mask >>> 16) & 0xff,
+            (res.mask >>> 8) & 0xff,
+            res.mask & 0xff
+          ].join(".");
+          const lines = [
+            `CIDR:        ${raw}`,
+            `Netmask:     ${maskIP}`,
+            `Network:     ${res.networkIP}`,
+            `Broadcast:   ${res.broadcastIP}`,
+            `Total IPs:   ${res.total}`,
+            `Usable IPs:  ${res.usable}`
+          ];
+          cidrOutput.value = lines.join("\n");
+        }
+
+        function handleBWCalc() {
+          const users = parseInt(bwUsers.value, 10);
+          const per = parseInt(bwPerUser.value, 10);
+          if (!users || !per || users <= 0 || per <= 0) {
+            bwOutput.value = "// Enter user count and kbps per user.";
+            return;
+          }
+          const totalKbps = users * per;
+          const mbps = totalKbps / 1024;
+          bwOutput.value = [
+            `Users:       ${users}`,
+            `Per user:    ${per} kbps`,
+            `Total:       ${totalKbps.toFixed(0)} kbps (${mbps.toFixed(2)} Mbps)`,
+            `Rule of thumb: aim for at least 1.2× (${(mbps * 1.2).toFixed(2)} Mbps) to stay comfortable.`
+          ].join("\n");
+        }
+
+        function renderCommands(platform) {
+          const commandsWin = [
+            {
+              cmd: "ipconfig /all",
+              label: "List adapters and IP config"
+            },
+            {
+              cmd: "nslookup example.com",
+              label: "DNS resolution check"
+            },
+            {
+              cmd: "tracert example.com",
+              label: "Route to service"
+            },
+            {
+              cmd: "netsh wlan show interfaces",
+              label: "Wi‑Fi state"
+            }
+          ];
+          const commandsNix = [
+            {
+              cmd: "ifconfig",
+              label: "List adapters and IP config"
+            },
+            {
+              cmd: "dig example.com",
+              label: "DNS resolution check"
+            },
+            {
+              cmd: "traceroute example.com",
+              label: "Route to service"
+            },
+            {
+              cmd: "curl -I https://example.com",
+              label: "HTTP reachability"
+            }
+          ];
+
+          const commands = platform === "win" ? commandsWin : commandsNix;
+          commandsList.innerHTML = "";
+
+          commands.forEach(entry => {
+            const row = document.createElement("div");
+            row.className = "command-row";
+            row.innerHTML = `
+              <div>
+                <div class="command-text">${entry.cmd}</div>
+                <div class="command-meta">${entry.label}</div>
+              </div>
+              <button class="btn btn-ghost btn-small">Copy</button>
+            `;
+            const btn = $("button", row);
+            btn.addEventListener("click", () => {
+              navigator.clipboard && navigator.clipboard.writeText(entry.cmd).catch(() => {});
+            });
+            commandsList.appendChild(row);
+          });
+        }
+
+        const handlers = {
+          "cidr-calc": handleCIDRCalc,
+          "bw-calc": handleBWCalc
+        };
+
+        $$(".btn[data-action]").forEach(btn => {
+          const action = btn.dataset.action;
+          if (!handlers[action]) return;
+          btn.addEventListener("click", () => handlers[action]());
+        });
+
+        $$(".btn[data-platform]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const platform = btn.dataset.platform;
+            $$(".btn[data-platform]").forEach(b => b.classList.toggle("btn-primary", b === btn));
+            renderCommands(platform);
+          });
+        });
+
+        renderCommands("win");
+        $$(".btn[data-platform='win']").forEach(btn => btn.classList.add("btn-primary"));
+      }
+
+      function bindToolkitLogEvents() {
+        const logInput = $("#log-input");
+        const logOutput = $("#log-output");
+
+        function indentJSONLike() {
+          const raw = logInput.value.trim();
+          if (!raw) {
+            logOutput.value = "";
+            return;
+          }
+          try {
+            const parsed = JSON.parse(raw);
+            logOutput.value = JSON.stringify(parsed, null, 2);
+            return;
+          } catch (_) {
+            // not JSON; fall through
+          }
+          // fallback: indent curly-brace heavy text heuristically
+          let indent = 0;
+          const lines = [];
+          for (const char of raw) {
+            if (char === "{") {
+              lines.push(" ".repeat(indent * 2) + "{");
+              indent++;
+            } else if (char === "}") {
+              indent = Math.max(0, indent - 1);
+              lines.push(" ".repeat(indent * 2) + "}");
+            }
+          }
+          logOutput.value = lines.length ? lines.join("\n") : "// Not JSON-like. Use align key=value instead.";
+        }
+
+        function alignEquals() {
+          const lines = logInput.value.split("\n");
+          const eqPositions = lines.map(l => l.indexOf("=")).filter(i => i > 0);
+          if (!eqPositions.length) {
+            logOutput.value = "// No key=value pairs found to align.";
+            return;
+          }
+          const maxPos = Math.max(...eqPositions);
+          const aligned = lines.map(l => {
+            const idx = l.indexOf("=");
+            if (idx < 0) return l;
+            const left = l.slice(0, idx).trimEnd();
+            const right = l.slice(idx + 1).trimStart();
+            const padding = " ".repeat(maxPos - left.length);
+            return left + " " + padding + "= " + right;
+          });
+          logOutput.value = aligned.join("\n");
+        }
+
+        function clearLogs() {
+          logInput.value = "";
+          logOutput.value = "";
+        }
+
+        const handlers = {
+          "log-indent": indentJSONLike,
+          "log-align-equals": alignEquals,
+          "log-clear": clearLogs
+        };
+
+        $$(".btn[data-action]").forEach(btn => {
+          const action = btn.dataset.action;
+          if (!handlers[action]) return;
+          btn.addEventListener("click", () => handlers[action]());
+        });
+      }
+
+      /* -------------------------------
+       * Notes logic
+       * ----------------------------- */
+
+      function bindNotesEvents() {
+        const templateSelect = $("#note-template");
+        const noteBody = $("#note-body");
+        const checklist = $("#note-checklist");
+        const scoreEl = $("#note-score");
+        const questionSelect = $("#question-context");
+        const questionOutput = $("#question-output");
+
+        const templates = {
+          connectivity:
+`Summary:
+Customer reports connectivity issues reaching [service/URL] from [location].
+
+Customer impact:
+[Describe business/user impact].
+
+Timeline:
+- First noticed: [time]
+- Frequency: [intermittent/constant]
+
+Steps taken:
+- Verified reachability to other sites/services.
+- Collected basic network info (IP, gateway, DNS).
+- Asked customer to run standard probes (ping, traceroute, DNS check).
+
+Findings:
+[Summarise any error messages, timeouts, or patterns].
+
+Next actions:
+[What you will do next, ETA, and what the customer should expect].`,
+
+          login:
+`Summary:
+Customer cannot log in to [system] using [SSO/local] account.
+
+Customer impact:
+[Scope of impact and urgency].
+
+Timeline:
+- First failed login: [time]
+- Last known good login: [time]
+
+Steps taken:
+- Verified username, tenant, and login URL.
+- Confirmed password reset / SSO status.
+- Checked for lockout, MFA prompts, or error codes.
+
+Findings:
+[Include specific error messages or codes].
+
+Next actions:
+[Resolution or escalation plan and expected follow-up].`,
+
+          performance:
+`Summary:
+Customer reports performance / slowness on [system/feature].
+
+Customer impact:
+[Who is impacted and how severe].
+
+Timeline:
+- Start time: [time]
+- Frequency: [sporadic/constant]
+- Affected locations: [list]
+
+Steps taken:
+- Confirmed scope (which features, which users).
+- Checked for known incidents/maintenance.
+- Compared behaviour on alternative networks or devices.
+
+Findings:
+[Patterns, times of day, specific operations].
+
+Next actions:
+[Monitoring, escalation, or workaround communicated to customer].`,
+
+          vpn:
+`Summary:
+Customer unable to establish VPN connection to [endpoint].
+
+Customer impact:
+[Remote work, access to internal apps, etc.].
+
+Timeline:
+- First failure: [time]
+- Has this worked before?: [yes/no]
+
+Steps taken:
+- Verified credentials and group/profile.
+- Confirmed network type (home, office, guest, hotspot).
+- Asked customer to provide VPN error code/message.
+
+Findings:
+[Client logs, error strings, typical cause].
+
+Next actions:
+[Firewall/route checks, certificate review, escalation if needed].`,
+
+          escalation:
+`Summary:
+Case escalated to Tier 2 / specialist queue.
+
+Customer impact:
+[Severity and any deadlines].
+
+Work done so far:
+- [Step 1]
+- [Step 2]
+- [Step 3]
+
+Data collected:
+- Environment details: [OS, location, network]
+- Logs/screenshots: [where stored]
+- Commands run: [list]
+
+Reason for escalation:
+[What is blocked or unclear at Tier 1].
+
+Customer expectations:
+[What the customer has been told, ETA, and follow-up channel].`
+        };
+
+        function applyTemplate() {
+          const key = templateSelect.value;
+          if (!key) return;
+          const current = noteBody.value.trim();
+          const template = templates[key] || "";
+          if (!current) {
+            noteBody.value = template;
+          } else {
+            noteBody.value = current + "\n\n" + template;
+          }
+        }
+
+        function copyNotes() {
+          const text = noteBody.value;
+          if (!text) return;
+          navigator.clipboard && navigator.clipboard.writeText(text).catch(() => {});
+        }
+
+        function normaliseNotes() {
+          const lines = noteBody.value
+            .split("\n")
+            .map(l => l.replace(/\s+$/g, ""))
+            .join("\n")
+            .replace(/\n{3,}/g, "\n\n");
+          noteBody.value = lines.trim();
+        }
+
+        function addSummaryPrefix() {
+          const text = noteBody.value;
+          const trimmed = text.trim();
+          const prefix = "Summary: [Add a one-line description here]\n\n";
+          if (!trimmed.startsWith("Summary:")) {
+            noteBody.value = prefix + trimmed;
+          }
+        }
+
+        function clearNotes() {
+          noteBody.value = "";
+          $$("#note-checklist input[type='checkbox']").forEach(cb => cb.checked = false);
+          updateScore();
+        }
+
+        function updateScore() {
+          const boxes = $$("#note-checklist input[type='checkbox']");
+          let total = 0;
+          let max = 0;
+          boxes.forEach(cb => {
+            const w = parseInt(cb.dataset.weight || "1", 10);
+            max += w;
+            if (cb.checked) total += w;
+          });
+          const scoreStr = `${total} / ${max}`;
+          let quality = "Start with a clear summary and the customer impact.";
+          let cls = "note-score";
+          const ratio = max ? total / max : 0;
+          if (ratio === 0) {
+            quality = "Start with a clear summary and the customer impact.";
+            cls = "note-score bad";
+          } else if (ratio < 0.5) {
+            quality = "Decent outline. Make sure steps and next action are explicit.";
+            cls = "note-score ok";
+          } else if (ratio < 0.9) {
+            quality = "Strong notes. Check wording is customer friendly.";
+            cls = "note-score good";
+          } else {
+            quality = "Excellent. This is Tier 2 and future-you friendly.";
+            cls = "note-score good";
+          }
+          scoreEl.className = cls;
+          scoreEl.innerHTML = `Score: <strong>${scoreStr}</strong> — ${quality}`;
+        }
+
+        checklist.addEventListener("change", updateScore);
+
+        function getQuestions(context) {
+          switch (context) {
+            case "connectivity":
+              return [
+                "When did this start, and has it worked before?",
+                "Are you on Wi‑Fi, wired, VPN, or mobile hotspot?",
+                "Do other websites or services work normally?",
+                "Do you see any specific error messages or codes?",
+                "Has anything changed recently on your device or network?"
+              ];
+            case "login":
+              return [
+                "Are you seeing an error message, or does the page just refresh?",
+                "Has your password or MFA method changed recently?",
+                "Are you using the expected login URL or SSO portal?",
+                "Does login work in an incognito/private browser window?",
+                "Can you log in from a different device or network?"
+              ];
+            case "vpn":
+              return [
+                "What is the exact VPN client and profile you're using?",
+                "Does the VPN reach the 'connecting' stage or fail immediately?",
+                "Are you on a corporate network, home network, or guest Wi‑Fi?",
+                "Is any other VPN or security software running at the same time?",
+                "Have you been able to connect from this location before?"
+              ];
+            case "performance":
+              return [
+                "Is the slowness constant, or does it come and go?",
+                "Does it affect specific actions (login, search, saving) or the whole app?",
+                "Are other colleagues seeing the same behaviour?",
+                "Does the issue improve on another network or device?",
+                "Roughly when during the day is it worst?"
+              ];
+            case "generic":
+            default:
+              return [
+                "When did the issue start, and how often does it occur?",
+                "What exactly are you trying to do when it fails?",
+                "What do you see on screen? Any error messages?",
+                "Has anything changed recently on your side (device, network, account)?",
+                "Is anyone else around you seeing the same issue?"
+              ];
+          }
+        }
+
+        function refreshQuestions() {
+          const context = questionSelect.value;
+          const qs = getQuestions(context);
+          questionOutput.value = qs.map(q => "- " + q).join("\n");
+        }
+
+        // Handlers
+        const handlers = {
+          "apply-template": applyTemplate,
+          "note-copy": copyNotes,
+          "note-normalise": normaliseNotes,
+          "note-summary": addSummaryPrefix,
+          "note-clear": clearNotes,
+          "questions-refresh": refreshQuestions,
+          "questions-copy": () => {
+            if (!questionOutput.value) return;
+            navigator.clipboard && navigator.clipboard.writeText(questionOutput.value).catch(() => {});
+          }
+        };
+
+        $$(".btn[data-action]").forEach(btn => {
+          const action = btn.dataset.action;
+          if (!handlers[action]) return;
+          btn.addEventListener("click", () => handlers[action]());
+        });
+
+        questionSelect.addEventListener("change", refreshQuestions);
+
+        // Initial state
+        refreshQuestions();
+        updateScore();
+      }
+
+      // Initial render
+      renderToolkitLayout();
+    })();
+
+    function bindTodoEvents() {
+
+  // Your original variables
+  const toDoForm = document.getElementById("to-do-form");
+  const toDoInput = document.getElementById("to-do-input");
+  const toDoList = document.getElementById("to-do-list");
+
+  const filterTodo = document.getElementById("filter-todo");
+  const filterDone = document.getElementById("filter-complete");
+  const filterToday = document.getElementById("filter-today");
+  const btnClear = document.getElementById("btn-clear");
+
+  // Load saved tasks
+  let allToDos = getAllToDo();
+  updateToDoList();
+
+  toDoForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    addToDo();
+  });
+
+  function addToDo () {
+    const now = new Date();
+    const shortDate = now.toLocaleDateString('en-GB');
+    const shortTime = now.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    const formatted = `${shortDate} ${shortTime}`;
+    const toDoText = toDoInput.value.trim();
+
+    if(toDoText.length > 0 ){
+      const toDoTextAll = (toDoText + "<span>" + formatted + "</span>");
+      const toDoObj = { text: toDoTextAll, completed: false };
+      allToDos.push(toDoObj);
+      updateToDoList();
+      saveToDo();
+      applyFilters();
+      toDoInput.value = "";
+    }
+  }
+
+  function updateToDoList (){
+    toDoList.innerHTML = "";
+    allToDos.forEach((toDo, toDoIndex) => {
+      const toDoItem = createToDoItem(toDo, toDoIndex);
+      toDoList.append(toDoItem);
+    });
+  }
+
+  function createToDoItem(toDo, toDoIndex) {
+    const toDoID = "todo-"+toDoIndex;
+    const toDoLi = document.createElement("li");
+    const toDoText = toDo.text;
+
+    toDoLi.className = "to-do";
+    toDoLi.innerHTML = `
+      <input type="checkbox" id="${toDoID}">
+      <label class="custom-checkbox" for="${toDoID}">
+        <svg fill="transparent" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+          <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+        </svg>
+      </label>
+      <label for="${toDoID}" class="to-do-text">${toDoText}</label>
+      <button class="to-do-delete-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+          <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360Z"/>
+        </svg>
+      </button>
+    `;
+
+    const deleteBtn = toDoLi.querySelector(".to-do-delete-btn");
+    deleteBtn.addEventListener("click", () => deleteToDoItem(toDoIndex));
+
+    const toDoCheckbox = toDoLi.querySelector("input");
+    toDoCheckbox.addEventListener("change", () =>  {
+      allToDos[toDoIndex].completed = toDoCheckbox.checked;
+      saveToDo();
+    });
+
+    toDoCheckbox.checked = toDo.completed;
+    return toDoLi;
+  }
+
+  function deleteToDoItem (toDoIndex) {
+    allToDos = allToDos.filter((_, i) => i !== toDoIndex);
+    saveToDo();
+    updateToDoList();
+  }
+
+  function saveToDo () {
+    localStorage.setItem("savedList", JSON.stringify(allToDos));
+  }
+
+  function getAllToDo () {
+    return JSON.parse(localStorage.getItem("savedList") || "[]");
+  }
+
+  // Filters
+  filterTodo.addEventListener("change", applyFilters);
+  filterDone.addEventListener("change", applyFilters);
+  filterToday.addEventListener("change", applyFilters);
+  btnClear.addEventListener("click", removeFilters);
+
+  function applyFilters() {
+    const items = toDoList.querySelectorAll("li");
+    const today = new Date().toLocaleDateString("en-GB");
+
+    items.forEach((item, index) => {
+      const checkbox = item.querySelector("input[type='checkbox']");
+      const text = allToDos[index].text;
+      const dateMatch = text.match(/<span>(.*?)<\/span>/);
+      const createdDate = dateMatch ? dateMatch[1].split(" ")[0] : null;
+
+      let show = true;
+
+      if (filterTodo.checked && checkbox.checked) show = false;
+      if (filterDone.checked && !checkbox.checked) show = false;
+      if (filterToday.checked && createdDate !== today) show = false;
+
+      item.style.display = show ? "" : "none";
+    });
+  }
+
+  function removeFilters() {
+    [filterDone, filterToday, filterTodo].forEach(filter => {
+      if (filter.checked) filter.checked = false;
+    });
+    updateToDoList();
+  }
+}
+
+  </script>
+</body>
+</html>
