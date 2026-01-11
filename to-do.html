@@ -49,10 +49,17 @@
             <div class="todo-wrapper">
                <h1>Todo App</h1>
                <div id="to-do-filter">
-                  <input type="checkbox">
-                  <input type="checkbox">
-                  <input type="checkbox">
-                  <input type="checkbox">
+                  <!-- <input type="button" value="Delete All" id="del-all"> -->
+                  <label for="filter-todo" id="fl-todo">To-Do
+                     <input class="filter-checkbox" type="checkbox" id="filter-todo">
+                  </label>
+                  <label for="filter-complete" id="fl-complete">Done
+                     <input class="filter-checkbox" type="checkbox" id="filter-complete">
+                  </label>
+                  <label for="filter-today" id="fl-today">Today
+                     <input class="filter-checkbox" type="checkbox" id="filter-today">
+                  </label>
+                  <input type="button" value="Clear" id="btn-clear">
                </div>
                <form id="to-do-form" action="">
                   <input id="to-do-input" type="text" placeholder="What would you like to add ?" autocomplete="off">
