@@ -1,0 +1,62 @@
+/* ============================================
+   TOOLKIT PANEL
+   ============================================ */
+
+#toolkit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+/* Toolkit sections */
+.toolkit-section {
+  padding: 16px;
+  background: var(--bg-panel-strong);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--glow-soft);
+}
+
+.toolkit-section h2 {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 18px;
+}
+
+/* Buttons inside toolkit */
+.toolkit-section .btn {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Output boxes */
+.toolkit-output {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(2, 2, 7, 0.7);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 13px;
+  white-space: pre-wrap;
+  min-height: 60px;
+}
+
+/* Input fields */
+.toolkit-section input[type="text"],
+.toolkit-section textarea {
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+/* Flex rows */
+.toolkit-row {
+  display: flex;
+  gap: 12px;
+}
+
+.toolkit-row > * {
+  flex: 1;
+}

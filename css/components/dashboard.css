@@ -1,0 +1,80 @@
+/* ============================================
+   DASHBOARD PANEL
+   ============================================ */
+
+.dashboard h1 {
+  margin-bottom: 6px;
+}
+
+#dash-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+/* Tiles */
+.dash-tile {
+  padding: 20px;
+  background: var(--bg-panel-strong);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--glow-soft);
+  cursor: pointer;
+  transition: background var(--fast), border var(--fast), transform var(--fast);
+}
+
+.dash-tile:hover {
+  background: rgba(79, 209, 197, 0.12);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.dash-tile h2 {
+  color: var(--accent);
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.dash-tile p {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Recent Tasks */
+.dash-section {
+  margin-top: 30px;
+}
+
+#dash-recent {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#dash-recent li {
+  padding: 12px;
+  background: rgba(2, 2, 7, 0.7);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#dash-recent li.empty {
+  text-align: center;
+  color: var(--text-faint);
+}
+
+#dash-recent .task-title {
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+#dash-recent .task-time {
+  font-size: 11px;
+  color: var(--text-faint);
+}

@@ -1,0 +1,156 @@
+/* ============================================
+   LOGIN / REGISTER PANEL
+   ============================================ */
+
+.login {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+#login-container,
+#register-container,
+#privacy-container {
+  padding: 20px;
+  background: var(--bg-panel-strong);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glow-soft);
+  animation: panelLoad var(--med);
+}
+
+/* Headings */
+.login h1 {
+  text-align: center;
+  margin-bottom: 18px;
+  color: var(--accent);
+}
+
+/* Form groups */
+.login-form-group {
+  margin-bottom: 16px;
+}
+
+.login-form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+
+.login-form-group input[type="text"],
+.login-form-group input[type="password"],
+.login-form-group input[type="email"] {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft);
+  background: #020207;
+  color: var(--text-main);
+  transition: border var(--fast), box-shadow var(--fast);
+}
+
+.login-form-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+
+/* Error messages */
+.error-msg {
+  font-size: 11px;
+  color: #fca5a5;
+  margin-top: 4px;
+}
+
+/* Submit button */
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgba(79, 209, 197, 0.15);
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--fast), border var(--fast);
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: rgba(79, 209, 197, 0.25);
+  border-color: var(--accent);
+}
+
+/* Links under form */
+.login-links {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.login-links a {
+  color: var(--text-soft);
+  transition: color var(--fast);
+}
+
+.login-links a:hover {
+  color: var(--accent);
+}
+
+/* Privacy policy panel */
+#privacy-container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+#privacy-container h2 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+#privacy-container p,
+#privacy-container li {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+#privacy-container ul {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+#privacy-container a {
+  color: var(--accent);
+}
+
+/* Back link */
+#privacy-back {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+/* Logout panel */
+#logout-container {
+  padding: 20px;
+  background: var(--bg-panel-strong);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glow-soft);
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#logout-container p {
+  margin-bottom: 14px;
+  color: var(--text-soft);
+}

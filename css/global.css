@@ -1,0 +1,218 @@
+/* ============================================
+   GLOBAL RESET & BASELINE
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: #020207;
+  color: var(--text-main);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+
+/* ============================================
+   THEME VARIABLES — OBSYCRA NEON GLASS
+   ============================================ */
+
+:root {
+  /* Core palette */
+  --bg-main: #020207;
+  --bg-panel: rgba(15, 23, 42, 0.65);
+  --bg-panel-strong: rgba(15, 23, 42, 0.85);
+
+  /* Neon accent */
+  --accent: #4fd1c5;
+  --accent-soft: rgba(79, 209, 197, 0.35);
+
+  /* Text */
+  --text-main: #e3e3e3;
+  --text-soft: #9ca3af;
+  --text-faint: #6b7280;
+
+  /* Borders */
+  --border-soft: rgba(79, 209, 197, 0.25);
+  --border-strong: rgba(79, 209, 197, 0.45);
+
+  /* Shadows */
+  --glow-soft: 0 0 20px rgba(79, 209, 197, 0.15);
+  --glow-strong: 0 0 40px rgba(79, 209, 197, 0.25);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Transitions */
+  --fast: 0.15s ease;
+  --med: 0.25s ease;
+}
+
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+p {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+
+/* ============================================
+   INPUTS & BUTTONS
+   ============================================ */
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft);
+  background: #020207;
+  color: var(--text-main);
+  transition: border var(--fast), box-shadow var(--fast);
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+  outline: none;
+}
+
+button,
+.btn {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: rgba(15, 23, 42, 0.75);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background var(--fast), border var(--fast), color var(--fast);
+}
+
+button:hover,
+.btn:hover {
+  background: rgba(79, 209, 197, 0.15);
+  border-color: var(--accent);
+}
+
+.btn-small {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* ============================================
+   CHECKBOXES — SMALL, INLINE, CLEAN
+   ============================================ */
+
+input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  appearance: none;
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  background: #020207;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-right: 6px;
+  position: relative;
+  transition: background var(--fast), border var(--fast);
+}
+
+input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  width: 4px;
+  height: 8px;
+  border: solid #020207;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.hidden {
+  display: none !important;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.glass {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glow-soft);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-soft {
+  color: var(--text-soft);
+}
+
+.text-faint {
+  color: var(--text-faint);
+}
