@@ -1,7 +1,3 @@
-/* ============================================
-   DASHBOARD PANEL
-   ============================================ */
-
 .dashboard h1 {
   margin-bottom: 6px;
 }
@@ -13,7 +9,6 @@
   gap: 18px;
 }
 
-/* Tiles */
 .dash-tile {
   padding: 20px;
   background: var(--bg-panel-strong);
@@ -42,7 +37,6 @@
   color: var(--text-soft);
 }
 
-/* Recent Tasks */
 .dash-section {
   margin-top: 30px;
 }

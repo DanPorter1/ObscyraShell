@@ -1,62 +1,62 @@
-/* ============================================
-   TOOLKIT PANEL
-   ============================================ */
-
-#toolkit-container {
+.notes-container {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-top: 10px;
-}
-
-/* Toolkit sections */
-.toolkit-section {
-  padding: 16px;
+  gap: 16px;
+  padding: 18px;
   background: var(--bg-panel-strong);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   box-shadow: var(--glow-soft);
 }
 
-.toolkit-section h2 {
-  margin-bottom: 10px;
-  color: var(--accent);
+.notes-container h2 {
+  margin-bottom: 8px;
   font-size: 18px;
+  color: var(--accent);
+  font-weight: 600;
 }
 
-/* Buttons inside toolkit */
-.toolkit-section .btn {
-  margin-top: 10px;
+.notes-container textarea,
+.notes-container input[type="text"] {
   width: 100%;
+  padding: 10px;
+  background: rgba(10, 10, 20, 0.6);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 14px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
-/* Output boxes */
-.toolkit-output {
+.notes-container .btn-generate {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.notes-output {
   margin-top: 12px;
-  padding: 12px;
+  padding: 14px;
   background: rgba(2, 2, 7, 0.7);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
   color: var(--text-main);
   font-size: 13px;
+  line-height: 1.45;
   white-space: pre-wrap;
-  min-height: 60px;
+  min-height: 80px;
+  overflow-y: auto;
 }
 
-/* Input fields */
-.toolkit-section input[type="text"],
-.toolkit-section textarea {
-  margin-top: 6px;
-  margin-bottom: 10px;
+.notes-output hr {
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  margin: 10px 0;
+  opacity: 0.5;
 }
 
-/* Flex rows */
-.toolkit-row {
-  display: flex;
-  gap: 12px;
-}
-
-.toolkit-row > * {
+.notes-row > * {
   flex: 1;
 }

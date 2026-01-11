@@ -1,16 +1,10 @@
-/* ============================================
-   Obscyra Shell — Toolkit Component
-   ============================================ */
-
 function renderToolkit() {
     setContent(`
         <section class="panel">
-            <h1>Service Desk Toolkit</h1>
-            <p class="text-soft">Quick utilities for triage, diagnostics, and case handling.</p>
+            <h1>Service Desk Toolkit - Still in development.</h1>
+            <p class="text-soft">Quick utilities diagnostics, and ticket updates.</p>
 
             <div id="toolkit-container">
-
-                <!-- IP Lookup -->
                 <div class="toolkit-section">
                     <h2>IP Lookup</h2>
                     <div class="toolkit-row">
@@ -20,7 +14,6 @@ function renderToolkit() {
                     <div class="toolkit-output" id="ip-output">Awaiting input...</div>
                 </div>
 
-                <!-- Ping Template -->
                 <div class="toolkit-section">
                     <h2>Ping Template</h2>
                     <textarea id="ping-input" placeholder="Enter hostname or IP..."></textarea>
@@ -45,16 +38,7 @@ function renderToolkit() {
     initToolkit();
 }
 
-
-/* ============================================
-   Toolkit Logic
-   ============================================ */
-
 function initToolkit() {
-
-    /* -------------------------------
-       IP LOOKUP
-    --------------------------------*/
     on("#ip-btn", "click", () => {
         const ip = document.querySelector("#ip-input").value.trim();
         const out = document.querySelector("#ip-output");
@@ -67,14 +51,10 @@ function initToolkit() {
         out.textContent = `Running lookup for: ${ip}\n\n` +
             `• nslookup ${ip}\n` +
             `• tracert ${ip}\n` +
-            `• ping ${ip} -n 4\n\n` +
+            `• ping ${ip}\n\n` +
             `Use these commands in CMD or PowerShell.`;
     });
 
-
-    /* -------------------------------
-       PING TEMPLATE
-    --------------------------------*/
     on("#ping-btn", "click", () => {
         const host = document.querySelector("#ping-input").value.trim();
         const out = document.querySelector("#ping-output");
@@ -84,22 +64,15 @@ function initToolkit() {
             return;
         }
 
+        // TODO finish ping scripting
         out.textContent =
 `Test Connectivity Script
 -------------------------
-ping ${host} -n 4
+ping ${host}
 
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "Ping successful" -ForegroundColor Green
-} else {
-    Write-Host "Ping failed" -ForegroundColor Red
-}`;
+In progress sorry `;
     });
 
-
-    /* -------------------------------
-       PASSWORD GENERATOR
-    --------------------------------*/
     on("#pw-btn", "click", () => {
         const len = parseInt(document.querySelector("#pw-length").value.trim());
         const out = document.querySelector("#pw-output");

@@ -1,7 +1,3 @@
-/* ============================================
-   Obscyra Shell — Dashboard Component
-   ============================================ */
-
 function renderDashboard() {
     const user = localStorage.getItem("obscyra_user");
     const name = user ? user.split("@")[0] : "Guest";
@@ -27,12 +23,12 @@ function renderDashboard() {
 
                 <div class="dash-tile" data-route="notes">
                     <h2>Notes</h2>
-                    <p>Structured case notes</p>
+                    <p>Structured ticket notes</p>
                 </div>
 
                 <div class="dash-tile" data-route="todo">
                     <h2>To‑Do</h2>
-                    <p>Tasks & reminders</p>
+                    <p>Tasks</p>
                 </div>
 
                 <div class="dash-tile" data-route="login">
@@ -64,13 +60,7 @@ function renderDashboard() {
     initDashboard();
 }
 
-
-/* ============================================
-   Dashboard Logic
-   ============================================ */
-
 function initDashboard() {
-    // Make tiles clickable
     document.querySelectorAll(".dash-tile").forEach(tile => {
         tile.addEventListener("click", () => {
             const route = tile.dataset.route;

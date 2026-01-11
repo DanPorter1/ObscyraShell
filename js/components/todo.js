@@ -1,11 +1,7 @@
-/* ============================================
-   Obscyra Shell — To‑Do Component
-   ============================================ */
-
 function renderTodo() {
     setContent(`
         <section class="panel">
-            <h1>To‑Do List</h1>
+            <h1>To-Do List</h1>
             <p class="text-soft">Track tasks, mark progress, and stay organised.</p>
 
             <form id="to-do-form">
@@ -27,25 +23,17 @@ function renderTodo() {
     initTodo();
 }
 
-
-/* ============================================
-   To‑Do Logic
-   ============================================ */
-
 let todoList = [];
 
-/* Load saved tasks */
 function loadTodos() {
     const saved = localStorage.getItem("obscyra_todos");
     todoList = saved ? JSON.parse(saved) : [];
 }
 
-/* Save tasks */
 function saveTodos() {
     localStorage.setItem("obscyra_todos", JSON.stringify(todoList));
 }
 
-/* Render tasks */
 function renderTodos() {
     const list = document.getElementById("to-do-list");
     list.innerHTML = "";
@@ -61,13 +49,16 @@ function renderTodos() {
         if (showCompleted && !task.completed) return;
 
         if (todayOnly) {
-            const taskDate = new Date(task.timestamp).toDateString();
-            if (taskDate !== today) return;
+            const taskDate = task.timestamp.split(" ")[0]; 
+            const todayDate = new Date().toLocaleDateString("en-GB");
+
+            if (taskDate !== todayDate) return;
         }
 
         const li = document.createElement("li");
         li.className = "to-do" + (task.completed ? " completed" : "");
 
+        // TODO Change Bin icon for del to-do
         li.innerHTML = `
             <input type="checkbox" ${task.completed ? "checked" : ""} data-index="${index}">
             <div class="to-do-text">
@@ -85,13 +76,10 @@ function renderTodos() {
     });
 }
 
-
-/* Initialise To‑Do Component */
 function initTodo() {
     loadTodos();
     renderTodos();
 
-    /* Add task */
     on("#to-do-form", "submit", (e) => {
         e.preventDefault();
         const input = document.getElementById("to-do-input");
@@ -109,7 +97,6 @@ function initTodo() {
         renderTodos();
     });
 
-    /* Toggle complete */
     document.getElementById("to-do-list").addEventListener("change", (e) => {
         if (e.target.type === "checkbox") {
             const index = e.target.dataset.index;
@@ -119,7 +106,6 @@ function initTodo() {
         }
     });
 
-    /* Delete task */
     document.getElementById("to-do-list").addEventListener("click", (e) => {
         if (e.target.closest("[data-delete]")) {
             const index = e.target.closest("[data-delete]").dataset.delete;
@@ -129,12 +115,10 @@ function initTodo() {
         }
     });
 
-    /* Filters */
     on("#filter-todo", "change", renderTodos);
     on("#filter-complete", "change", renderTodos);
     on("#filter-today", "change", renderTodos);
-
-    /* Clear filters */
+    
     on("#btn-clear", "click", () => {
         document.getElementById("filter-todo").checked = false;
         document.getElementById("filter-complete").checked = false;

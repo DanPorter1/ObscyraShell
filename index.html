@@ -5,22 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Obscyra Shell</title>
 
-    <!-- Global Styles -->
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/layout.css">
-
-    <!-- Component Styles -->
-     <link rel="stylesheet" href="css/components/dashboard.css">
+    <link rel="stylesheet" href="css/components/dashboard.css">
     <link rel="stylesheet" href="css/components/toolkit.css">
     <link rel="stylesheet" href="css/components/notes.css">
     <link rel="stylesheet" href="css/components/todo.css">
     <link rel="stylesheet" href="css/components/login.css">
 
-    <!-- App Core -->
     <script src="js/app.js" defer></script>
     <script src="js/router.js" defer></script>
 
-    <!-- Components -->
     <script src="js/components/dashboard.js" defer></script>
     <script src="js/components/toolkit.js" defer></script>
     <script src="js/components/notes.js" defer></script>
@@ -30,9 +25,7 @@
 
 <body>
 
-    <!-- ===========================
-         TOP NAVIGATION (ACTIVE)
-    ============================ -->
+<!-- Top Nav -->
     <header id="top-nav">
         <div class="nav-left">
             <div class="logo">
@@ -43,15 +36,13 @@
         <nav class="nav-links">
             <a href="#toolkit" data-route="toolkit">Toolkit</a>
             <a href="#notes" data-route="notes">Notes</a>
-            <a href="#todo" data-route="todo">To‑Do</a>
+            <a href="#todo" data-route="todo">To-Do</a>
             <a href="#login" data-route="login">Login</a>
         </nav>
     </header>
 
 
-    <!-- ===========================
-         HIDDEN SIDEBAR (FUTURE)
-    ============================ -->
+<!-- Sidebar - Hidden -->
     <aside id="sidebar" class="hidden">
         <div class="sidebar-header">
             <h2>Obscyra Shell</h2>
@@ -60,19 +51,14 @@
         <ul class="sidebar-nav">
             <li data-route="toolkit">Toolkit</li>
             <li data-route="notes">Notes</li>
-            <li data-route="todo">To‑Do</li>
+            <li data-route="todo">To-Do</li>
             <li data-route="login">Login</li>
         </ul>
     </aside>
 
-
-    <!-- ===========================
-         MAIN APPLICATION ROOT
-    ============================ -->
+    <!-- Changin Content -->
     <main id="app-root">
-        <!-- Components will be injected here by router.js -->
     </main>
-
 
 </body>
 </html>
