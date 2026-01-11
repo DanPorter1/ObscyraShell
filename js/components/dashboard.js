@@ -1,11 +1,11 @@
 function renderDashboard() {
-    const user = localStorage.getItem("obscyra_user");
+    const user = localStorage.getItem("userID");
     const name = user ? user.split("@")[0] : "Guest";
 
     // Load recent tasks (max 5)
     let recent = [];
     try {
-        const saved = JSON.parse(localStorage.getItem("obscyra_todos") || "[]");
+        const saved = JSON.parse(localStorage.getItem("todos") || "[]");
         recent = saved.slice(-5).reverse();
     } catch (e) {}
 

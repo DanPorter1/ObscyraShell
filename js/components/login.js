@@ -1,5 +1,5 @@
 function renderLogin() {
-    const user = localStorage.getItem("obscyra_user");
+    const user = localStorage.getItem("userID");
     if (user) {
         setContent(`
             <section class="panel login">
@@ -12,8 +12,8 @@ function renderLogin() {
         `);
 
         on("#logout-btn", "click", () => {
-            localStorage.removeItem("obscyra_user");
-            // TODO Remove cookie
+            localStorage.removeItem("userID");
+            localStorage.removeItem("auth");
             navigate("login");
         });
 
@@ -61,8 +61,7 @@ function initLogin() {
         renderPrivacy();
     });
 
-    // TODO log in logic
-    on("#login-btn", "click", () => {
+    on("#login-btn", "click", async () => {
         const email = document.getElementById("login-email").value.trim();
         const password = document.getElementById("login-password").value.trim();
 
@@ -81,9 +80,28 @@ function initLogin() {
             } return; 
         }
 
-        // Fake login success
-        localStorage.setItem("obscyra_user", email);
-        navigate("login");
+        const browser = navigator.userAgentData?.brands?.[0]?.brand || navigator.userAgent;
+
+        const res = await fetch("https://ancient-term-4335.danporter-36a.workers.dev/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                browser: browser
+            })
+        }); 
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            emailErr.textContent = data.error
+            return;
+        }
+
+        localStorage.setItem("auth", data.token);
+        localStorage.setItem("userID", data.userID)
+        navigate("home");
     });
 }
 
@@ -132,17 +150,22 @@ function initRegister() {
         renderLogin();
     });
 
-    on("#reg-btn", "click", () => {
-        // TODO Validate username -- Add username to DB 
+    on("#reg-btn", "click", async () => {
         const email = document.getElementById("reg-email").value.trim();
         const password = document.getElementById("reg-password").value.trim();
         const rePassword = document.getElementById("reg-re-password").value.trim();
+        const username = document.getElementById("reg-name").value.trim();
 
         const emailErr = document.getElementById("reg-email-error");
         const passErr = document.getElementById("reg-password-error");
 
         emailErr.textContent = "";
         passErr.textContent = "";
+
+        if (!username) {
+            emailErr.textContent = "Please enter a username"
+            return;
+        }
 
         const result = loginLogic(email, password); 
         if (!result.valid) { 
@@ -158,9 +181,35 @@ function initRegister() {
             return;
         }
 
-        // TODO Registration Logic
-        localStorage.setItem("obscyra_user", email);
-        navigate("login");
+        const res = await fetch("https://ancient-term-4335.danporter-36a.workers.dev/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                username: username
+            })
+        }); 
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            emailErr.textContent = "Email already registered - Please try a different E-mail"
+            return;
+        }
+        setContent(`
+            <section class="panel login"> 
+                <h1>Created Account</h1> 
+                <p class="success-msg">Your account has been created. You may now log in.</p> 
+                <a href="#" id="reg-back">Back to login</a>
+            </section> 
+            `);
+
+        on("#reg-back", "click", (e) => { 
+            e.preventDefault(); 
+            renderLogin(); 
+        });
+
     });
 }
 

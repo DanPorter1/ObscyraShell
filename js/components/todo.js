@@ -26,12 +26,12 @@ function renderTodo() {
 let todoList = [];
 
 function loadTodos() {
-    const saved = localStorage.getItem("obscyra_todos");
+    const saved = localStorage.getItem("todos");
     todoList = saved ? JSON.parse(saved) : [];
 }
 
 function saveTodos() {
-    localStorage.setItem("obscyra_todos", JSON.stringify(todoList));
+    localStorage.setItem("todos", JSON.stringify(todoList));
 }
 
 function renderTodos() {
@@ -67,7 +67,7 @@ function renderTodos() {
             </div>
             <button class="to-do-delete-btn" data-delete="${index}">
                 <svg viewBox="0 0 24 24">
-                    <path d="M9 3v1H4v2h16V4h-5V3H9zm1 5v10h2V8h-2zm4 0v10h2V8h-2z"/>
+                    <path d="M3 6h18v2H3V6zm2 3h14l-1.5 12h-11L5 9zm5-5h4v2h-4V4z"/>
                 </svg>
             </button>
         `;

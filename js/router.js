@@ -47,7 +47,3 @@ function isAuth() {
     return localStorage.getItem("auth") === "true";
 }
 
-
-
-
-// return localStorage.getItem("authToken") !== null;
