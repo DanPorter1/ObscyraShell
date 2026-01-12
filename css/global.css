@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   background: #020207;
   color: var(--text-main);
@@ -67,6 +68,7 @@ p {
   color: var(--text-soft);
   line-height: 1.5;
 }
+
 input[type="name"],
 input[type="text"],
 input[type="password"],

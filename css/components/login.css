@@ -1,6 +1,7 @@
 .login {
   max-width: 480px;
   margin: 0 auto;
+  display: block;
 }
 
 #login-container,

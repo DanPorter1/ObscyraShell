@@ -30,6 +30,10 @@
   border-radius: var(--radius-sm);
 }
 
+#btn-save {
+  margin-left: auto;
+}
+
 #to-do-list {
   display: flex;
   flex-direction: column;

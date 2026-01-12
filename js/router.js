@@ -1,49 +1,49 @@
 const routes = {
-    home: () => renderDashboard(),
-    toolkit: () => renderToolkit(),
-    notes: () => renderNotes(),
-    todo: () => renderTodo(),
-    login: () => renderLogin(),
+  home: () => renderDashboard(),
+  toolkit: () => renderToolkit(),
+  notes: () => renderNotes(),
+  todo: () => renderTodo(),
+  login: () => renderLogin(),
+  testgame: () => renderGame(),
 };
 
-const protectedRoutes = ["home", "toolkit", "notes", "todo"];
+const protectedRoutes = ["home", "toolkit", "notes", "todo", "game"];
 
 function navigate(route) {
-    if (!routes[route]) {
-        return;
-    }
+  if (!routes[route]) {
+    return;
+  }
 
-    const protectedRoutes = ["home", "toolkit", "notes", "todo"]; 
-    const loggedIn = localStorage.getItem("auth") !== null;
+  const protectedRoutes = ["home", "toolkit", "notes", "todo", "game"];
+  const loggedIn = localStorage.getItem("auth") !== null;
 
-    if (protectedRoutes.includes(route) && !loggedIn) { 
-        return navigate("login"); 
-    }
+  if (protectedRoutes.includes(route) && !loggedIn) {
+    return navigate("login");
+  }
 
-    routes[route]();
-    setActiveNav(route);
+  routes[route]();
+  setActiveNav(route);
 
-    if (window.location.hash !== `#${route}`) {
-        history.replaceState(null, "", `#${route}`);
-    }
+  if (window.location.hash !== `#${route}`) {
+    history.replaceState(null, "", `#${route}`);
+  }
 }
 
 window.addEventListener("load", () => {
-    let route = window.location.hash.replace("#", "");
-    if (!route || !routes[route]) {
-        route = "home";
-    }
-    navigate(route);
+  let route = window.location.hash.replace("#", "");
+  if (!route || !routes[route]) {
+    route = "home";
+  }
+  navigate(route);
 });
 
 window.addEventListener("hashchange", () => {
-    const route = window.location.hash.replace("#", "");
-    if (routes[route]) {
-        navigate(route);
-    }
+  const route = window.location.hash.replace("#", "");
+  if (routes[route]) {
+    navigate(route);
+  }
 });
 
 function isAuth() {
-    return localStorage.getItem("auth") === "true";
+  return localStorage.getItem("auth") === "true";
 }
-
